@@ -4,27 +4,128 @@
 #include <limits>
 using namespace std;
 
+
+//defining screen and grid size
+#define screenwidth 2200
+#define screenheight 1200
+#define cellsize 100
+#define grid_width (screenwidth / cellsize)
+#define grid_height (screenheight / cellsize)
+
+
+
+struct Cell {
+    bool visited;
+    bool topWall, bottomWall, leftWall, rightWall;
+};
+
+
+
+
+void InitializeMaze() {
+    for (int x = 0; x < grid_width; x++) {
+        for (int y = 0; y < grid_height; y++) {
+            maze[x][y].visited = false;
+            maze[x][y].topWall = true;
+            maze[x][y].bottomWall = true;
+            maze[x][y].leftWall = true;
+            maze[x][y].rightWall = true;
+        }
+    }
+}
+
+void GenerateMaze(int x, int y) {
+    maze[x][y].visited = true;
+    do {
+        int direction[] = { 0, 1, 2, 3 };// up,right,down and left directions
+        for (int i = 0; i < 4; i++) {
+            int j = GetRandomValue(i, 3);
+            int temp = direction[i];
+            direction[i] = direction[j];
+            direction[j] = temp;
+        }
+        bool moved = false;
+        for (int i = 0; i < 4; i++) {
+            int nx = x, ny = y;
+            if (direction[i] == 0) { //Up
+                ny -= 1;
+            }
+            else if (direction[i] == 1) { // Right
+                nx += 1;
+            }
+            else if (direction[i] == 2) { // Down
+                ny += 1;
+            }
+            else if (direction[i] == 3) { // Left
+                nx -= 1;
+            }
+        
+        if (nx >= 0 && nx < grid_width && ny >= 0 && ny < grid_height && !maze[nx][ny].visited) {
+            if (direction[i] == 0) {
+                maze[x][y].topWall = false;
+                maze[nx][ny].bottomWall = false;
+            }
+            else if (direction[i] == 1) {
+                maze[x][y].rightWall = false;
+                maze[nx][ny].leftWall = false;
+            }
+            else if (direction[i] == 2) {
+                maze[x][y].bottomWall = false;
+                maze[nx][ny].topWall = false;
+            }
+            else if (direction[i] == 3) {
+                maze[x][y].leftWall = false;
+                maze[nx][ny].rightWall = false;
+            }
+            GenerateMaze(nx, ny); 
+            moved = true;
+            break;
+
+           }
+        }
+        if (!moved) {
+            break;
+        }
+
+    } while (true);
+}
+
+
 // clearing screen
 void clearScreen() {
     cout << string(100, '\n');
 }
 
+
+
+
 void printTitle() {
     cout << "=== GAME MENU ===\n\n";
 }
+
+
+ 
+
+
 
 void StartNewGame() {
     clearScreen();
     cout << "Starting new Game..." << "\n";
     cout << "Press Enter to open Raylib window...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
+    cin.get();*/
 
     // Raylib
-    InitWindow(800, 600, "Raylib Window - New Game");
-    SetTargetFPS(60);
+
+
+    InitWindow(screenwidth, screenheight, "Raylib Window - New Game");
+    
+    InitializeMaze();
+    GenerateMaze(0, 0);// resets starting position to 0, 0.
+    SetTargetFPS(10);
 
     while (!WindowShouldClose()) {
+        
         BeginDrawing();
         ClearBackground(DARKGRAY);
         DrawText("Raylib window is running!", 220, 280, 20, YELLOW);
@@ -33,6 +134,10 @@ void StartNewGame() {
 
     CloseWindow();
 }
+
+
+
+
 
 void settingsMenu() {
     clearScreen();
@@ -44,6 +149,8 @@ void settingsMenu() {
     cin.get();
 }
 
+
+
 void helpMenu() {
     clearScreen();
     cout << "[HELP]\n";
@@ -53,6 +160,8 @@ void helpMenu() {
     cin.get();
 }
 
+
+
 void showMenu() {
     clearScreen();
     printTitle();
@@ -61,6 +170,8 @@ void showMenu() {
     cout << "3. Help\n";
     cout << "4. Exit\n";
 }
+
+
 
 int main() {
     int choice = 0;
