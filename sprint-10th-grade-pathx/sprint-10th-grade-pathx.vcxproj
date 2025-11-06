@@ -126,7 +126,6 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="help.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="sprint-10th-grade-pathx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />

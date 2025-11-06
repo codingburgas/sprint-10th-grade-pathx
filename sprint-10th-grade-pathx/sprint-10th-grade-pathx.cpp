@@ -21,7 +21,6 @@ struct Cell {
 
 
 
-
 void InitializeMaze() {
     for (int x = 0; x < grid_width; x++) {
         for (int y = 0; y < grid_height; y++) {
