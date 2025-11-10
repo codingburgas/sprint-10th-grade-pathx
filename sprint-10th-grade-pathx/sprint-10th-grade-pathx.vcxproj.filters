@@ -24,12 +24,39 @@
     <ClCompile Include="help.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gameEasy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameHard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameMedium.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snakeEasy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snakeHard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snakeMedium.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="help.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameEasy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameHard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameMedium.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
