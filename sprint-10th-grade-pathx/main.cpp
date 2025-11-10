@@ -1,106 +1,107 @@
 #include "raylib.h"
-#include <string>
+#include "game.h"  
+#define MENU_W 900
+#define MENU_H 600
 
-void StartNewGame();
-void ShowHelp();
-void SettingsMenu();
-
-// Global  colors
-static Color BG_COLOR = { 15, 15, 20, 255 };
-static Color PANEL_COLOR = { 30, 30, 40, 255 };
-static Color TEXT_COLOR = { 220, 220, 255, 255 };
-static Color HIGHLIGHT_COLOR = { 130, 180, 255, 255 };
-
-enum MenuOption { MENU_START = 0, MENU_SETTINGS, MENU_HELP, MENU_EXIT, MENU_COUNT };
+enum GameState {
+    STATE_MENU,
+    STATE_SETTINGS,
+    STATE_HELP,
+    STATE_EXIT
+};
 
 int main() {
-    InitWindow(900, 600, "Maze Game Menu");
+    InitWindow(MENU_W, MENU_H, "Maze Game Menu");
     SetTargetFPS(60);
 
-    Font font = LoadFont("resources/RobotoSlab-Bold.ttf");
+    GameState state = STATE_MENU;
 
-    int selected = 0;
+    Rectangle btnStart = { 350, 250, 200, 40 };
+    Rectangle btnSettings = { 350, 300, 200, 40 };
+    Rectangle btnHelp = { 350, 350, 200, 40 };
+    Rectangle btnExit = { 350, 400, 200, 40 };
 
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_UP)) selected = (selected - 1 + MENU_COUNT) % MENU_COUNT;
-        if (IsKeyPressed(KEY_DOWN)) selected = (selected + 1) % MENU_COUNT;
 
-        if (IsKeyPressed(KEY_ENTER)) {
-            switch (selected) {
-            case MENU_START: StartNewGame(); break;
-            case MENU_SETTINGS: SettingsMenu(); break;
-            case MENU_HELP: ShowHelp(); break;
-            case MENU_EXIT: CloseWindow(); return 0;
+        Vector2 mouse = GetMousePosition();
+
+        switch (state) {
+
+        case STATE_MENU:
+
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+
+                if (CheckCollisionPointRec(mouse, btnStart)) {
+                 
+                    StartNewGame();
+
+                 
+                    InitWindow(MENU_W, MENU_H, "Maze Game Menu");
+                    SetTargetFPS(60);
+                    state = STATE_MENU;
+                }
+
+                if (CheckCollisionPointRec(mouse, btnSettings)) {
+                    state = STATE_SETTINGS;
+                }
+
+                if (CheckCollisionPointRec(mouse, btnHelp)) {
+                    state = STATE_HELP;
+                }
+
+                if (CheckCollisionPointRec(mouse, btnExit)) {
+                    state = STATE_EXIT;
+                }
             }
+
+            BeginDrawing();
+            ClearBackground(BLACK);
+
+            DrawText("MAZE PROJECT", 240, 130, 50, WHITE);
+
+            DrawRectangleRec(btnStart, DARKGRAY);
+            DrawRectangleRec(btnSettings, DARKGRAY);
+            DrawRectangleRec(btnHelp, DARKGRAY);
+            DrawRectangleRec(btnExit, DARKGRAY);
+
+            DrawText("Start New Game", btnStart.x + 15, btnStart.y + 10, 20, SKYBLUE);
+            DrawText("Settings", btnSettings.x + 15, btnSettings.y + 10, 20, RAYWHITE);
+            DrawText("Help", btnHelp.x + 15, btnHelp.y + 10, 20, RAYWHITE);
+            DrawText("Exit", btnExit.x + 15, btnExit.y + 10, 20, RED);
+
+            EndDrawing();
+            break;
+
+        case STATE_SETTINGS:
+
+            BeginDrawing();
+            ClearBackground(DARKGRAY);
+            DrawText("SETTINGS — Press ESC to return", 150, 200, 30, WHITE);
+            EndDrawing();
+
+            if (IsKeyPressed(KEY_ESCAPE)) {
+                state = STATE_MENU;
+            }
+            break;
+
+        case STATE_HELP:
+
+            BeginDrawing();
+            ClearBackground(DARKGRAY);
+            DrawText("HELP — Press ESC to return", 150, 200, 30, WHITE);
+            EndDrawing();
+
+            if (IsKeyPressed(KEY_ESCAPE)) {
+                state = STATE_MENU;
+            }
+            break;
+
+        case STATE_EXIT:
+            CloseWindow();
+            return 0;
         }
-
-        BeginDrawing();
-        ClearBackground(BG_COLOR);
-
-        DrawTextEx(font, "MAZE PROJECT", { 300, 80 }, 48, 2, TEXT_COLOR);
-
-        const char* options[MENU_COUNT] = {
-            "Start New Game",
-            "Settings",
-            "Help",
-            "Exit"
-        };
-
-        for (int i = 0; i < MENU_COUNT; i++) {
-            Color c = (i == selected) ? HIGHLIGHT_COLOR : TEXT_COLOR;
-            DrawTextEx(font, options[i], { 330, (float)(220 + i * 70) }, 32, 2, c);
-        }
-
-        EndDrawing();
     }
 
     CloseWindow();
     return 0;
-}
-
-
-void SettingsMenu() {
-    while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_ESCAPE)) return;
-
-        BeginDrawing();
-        ClearBackground(BG_COLOR);
-
-        DrawText("[Settings]", 50, 50, 40, TEXT_COLOR);
-        DrawText("Difficulty: Easy / Medium / Hard (not implemented)", 50, 130, 20, TEXT_COLOR);
-        DrawText("Press ESC to return", 50, 200, 20, HIGHLIGHT_COLOR);
-
-        EndDrawing();
-    }
-}
-
-void ShowHelp() {
-    while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_ESCAPE)) return;
-
-        BeginDrawing();
-        ClearBackground(BG_COLOR);
-
-        DrawText("[Help]", 50, 50, 40, TEXT_COLOR);
-        DrawText("Navigate the maze and reach the goal.", 50, 130, 20, TEXT_COLOR);
-        DrawText("Use arrow keys to move.", 50, 160, 20, TEXT_COLOR);
-        DrawText("Press ESC to return", 50, 220, 20, HIGHLIGHT_COLOR);
-
-        EndDrawing();
-    }
-}
-
-void StartNewGame() {
-    while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_ESCAPE)) return;
-
-        BeginDrawing();
-        ClearBackground(BG_COLOR);
-
-        DrawText("[Maze Game Placeholder]", 50, 50, 30, TEXT_COLOR);
-        DrawText("Game logic is not implemented yet.", 50, 100, 20, TEXT_COLOR);
-        DrawText("Press ESC to return", 50, 160, 20, HIGHLIGHT_COLOR);
-
-        EndDrawing();
-    }
 }
