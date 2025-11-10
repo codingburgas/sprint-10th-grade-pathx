@@ -1,8 +1,5 @@
-﻿#ifndef GAME_H
-#define GAME_H
+#pragma once
 
-void StartEasyGame();
-void StartMediumGame();
-void StartHardGame();
-
-#endif
+void RunGame();
+void StartNewGame();
+void InitializeMazeLogic(); 

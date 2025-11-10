@@ -1,13 +1,14 @@
-#include "raylib.h"
+#include <iostream>
+#include <limits>
 #include "help.h"
+using namespace std;
 
-void ShowHelp() {
-    bool running = true;
-    while (running && !WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(DARKGRAY);
-        DrawText("HELP:\nWASD to move\nReach the red square to win\nPress ESC to return", 50, 50, 30, WHITE);
-        EndDrawing();
-        if (IsKeyPressed(KEY_ESCAPE)) running = false;
-    }
+void showHelp() {
+    cout << "[HELP]\n";
+    cout << "Use the menu options to navigate the game.\n";
+    cout << "1. Start a new game to open Raylib window.\n";
+    cout << "2. Change settings if available.\n";
+    cout << "3. Exit to close the program.\n\n";
+    cout << "Press Enter to return...";
+    cin.get();
 }
