@@ -1,7 +1,4 @@
 #ifndef HELP_H
 #define HELP_H
-
-void showHelp();
-
+void ShowHelp();
 #endif
-#pragma once
