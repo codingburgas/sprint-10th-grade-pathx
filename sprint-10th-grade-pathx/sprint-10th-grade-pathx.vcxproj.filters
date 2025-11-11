@@ -33,15 +33,6 @@
     <ClCompile Include="gameMedium.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="snakeEasy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="snakeHard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="snakeMedium.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">

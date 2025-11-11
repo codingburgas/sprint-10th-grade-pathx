@@ -8,7 +8,6 @@ struct Cell { bool visited, topWall, bottomWall, leftWall, rightWall; };
 
 static Cell maze[GRID_W][GRID_H];
 static int px = 0, py = 0, endX = GRID_W - 1, endY = GRID_H - 1;
-static int CELL_SIZE;
 
 static void InitializeMaze() {
     for (int x = 0; x < GRID_W; x++)
@@ -16,13 +15,18 @@ static void InitializeMaze() {
             maze[x][y] = { false,true,true,true,true };
 }
 
+static void ShuffleDirs(int d[4]) {
+    for (int i = 0; i < 4; i++) {
+        int r = GetRandomValue(i, 3);
+        int t = d[i]; d[i] = d[r]; d[r] = t;
+    }
+}
+
 static void GenerateMaze(int x, int y) {
     maze[x][y].visited = true;
     int dirs[4] = { 0,1,2,3 };
-    for (int i = 0; i < 4; i++) {
-        int r = GetRandomValue(i, 3);
-        int t = dirs[i]; dirs[i] = dirs[r]; dirs[r] = t;
-    }
+    ShuffleDirs(dirs);
+
     for (int i = 0; i < 4; i++) {
         int nx = x, ny = y;
         if (dirs[i] == 0) ny--;
@@ -31,24 +35,27 @@ static void GenerateMaze(int x, int y) {
         if (dirs[i] == 3) nx--;
         if (nx < 0 || nx >= GRID_W || ny < 0 || ny >= GRID_H) continue;
         if (maze[nx][ny].visited) continue;
+
         if (dirs[i] == 0) { maze[x][y].topWall = false; maze[nx][ny].bottomWall = false; }
         if (dirs[i] == 1) { maze[x][y].rightWall = false; maze[nx][ny].leftWall = false; }
         if (dirs[i] == 2) { maze[x][y].bottomWall = false; maze[nx][ny].topWall = false; }
         if (dirs[i] == 3) { maze[x][y].leftWall = false; maze[nx][ny].rightWall = false; }
+
         GenerateMaze(nx, ny);
     }
 }
 
-static void DrawMaze() {
+static void DrawMaze(int cellSize, int ox, int oy) {
     for (int x = 0; x < GRID_W; x++)
         for (int y = 0; y < GRID_H; y++) {
-            int sx = x * CELL_SIZE, sy = y * CELL_SIZE;
-            if (maze[x][y].topWall) DrawLine(sx, sy, sx + CELL_SIZE, sy, WHITE);
-            if (maze[x][y].leftWall) DrawLine(sx, sy, sx, sy + CELL_SIZE, WHITE);
-            if (maze[x][y].rightWall) DrawLine(sx + CELL_SIZE, sy, sx + CELL_SIZE, sy + CELL_SIZE, WHITE);
-            if (maze[x][y].bottomWall) DrawLine(sx, sy + CELL_SIZE, sx + CELL_SIZE, sy + CELL_SIZE, WHITE);
+            int sx = ox + x * cellSize;
+            int sy = oy + y * cellSize;
+            if (maze[x][y].topWall) DrawLine(sx, sy, sx + cellSize, sy, WHITE);
+            if (maze[x][y].leftWall) DrawLine(sx, sy, sx, sy + cellSize, WHITE);
+            if (maze[x][y].rightWall) DrawLine(sx + cellSize, sy, sx + cellSize, sy + cellSize, WHITE);
+            if (maze[x][y].bottomWall) DrawLine(sx, sy + cellSize, sx + cellSize, sy + cellSize, WHITE);
         }
-    DrawRectangle(endX * CELL_SIZE + 10, endY * CELL_SIZE + 10, CELL_SIZE - 20, CELL_SIZE - 20, RED);
+    DrawRectangle(ox + endX * cellSize + 5, oy + endY * cellSize + 5, cellSize - 10, cellSize - 10, RED);
 }
 
 static void MovePlayer() {
@@ -59,11 +66,17 @@ static void MovePlayer() {
 }
 
 void StartEasyGame() {
-    InitWindow(0, 0, "EASY MAZE"); ToggleFullscreen();
-    CELL_SIZE = GetScreenWidth() / GRID_W;
-    InitializeMaze(); GenerateMaze(0, 0);
-    px = 0; py = 0; bool win = false;
-    SetTargetFPS(60);
+    int sw = GetScreenWidth();
+    int sh = GetScreenHeight();
+    int cellSize = (sw / GRID_W < sh / GRID_H) ? sw / GRID_W : sh / GRID_H;
+    int ox = (sw - cellSize * GRID_W) / 2;
+    int oy = (sh - cellSize * GRID_H) / 2;
+
+    InitializeMaze();
+    GenerateMaze(0, 0);
+
+    px = 0; py = 0;
+    bool win = false;
 
     while (!WindowShouldClose()) {
         if (!win) MovePlayer();
@@ -71,14 +84,14 @@ void StartEasyGame() {
 
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawMaze();
-        DrawCircle(px * CELL_SIZE + CELL_SIZE / 2, py * CELL_SIZE + CELL_SIZE / 2, CELL_SIZE / 3, YELLOW);
+        DrawMaze(cellSize, ox, oy);
+        DrawCircle(ox + px * cellSize + cellSize / 2, oy + py * cellSize + cellSize / 2, cellSize / 3, YELLOW);
         if (win) {
-            DrawText("YOU WIN!", GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 - 50, 60, GOLD);
-            DrawText("Press ESC to exit", GetScreenWidth() / 2 - 140, GetScreenHeight() / 2 + 20, 30, RAYWHITE);
+            DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
+            DrawText("Press ESC to return", sw / 2 - 140, sh / 2 + 20, 30, RAYWHITE);
         }
         EndDrawing();
+
         if (IsKeyPressed(KEY_ESCAPE)) break;
     }
-    CloseWindow();
 }

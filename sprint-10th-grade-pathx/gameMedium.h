@@ -1,4 +1,3 @@
-#ifndef GAME_MEDIUM_H
-#define GAME_MEDIUM_H
+#pragma once
+
 void StartMediumGame();
-#endif

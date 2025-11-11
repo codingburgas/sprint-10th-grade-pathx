@@ -129,9 +129,6 @@
     <ClCompile Include="gameMedium.cpp" />
     <ClCompile Include="help.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="snakeEasy.cpp" />
-    <ClCompile Include="snakeHard.cpp" />
-    <ClCompile Include="snakeMedium.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
