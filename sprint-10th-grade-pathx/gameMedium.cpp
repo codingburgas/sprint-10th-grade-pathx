@@ -2,12 +2,18 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-#include "gameMedium.h"
 
 static const int GRID_W = 25;
 static const int GRID_H = 25;
 
-static int maze[GRID_H][GRID_W];
+struct Cell {
+    bool topWall = true;
+    bool bottomWall = true;
+    bool leftWall = true;
+    bool rightWall = true;
+};
+
+static Cell maze[GRID_H][GRID_W];
 
 static int playerX = 0;
 static int playerY = 0;
@@ -18,85 +24,68 @@ static int endY = GRID_H - 1;
 static double blinkTimer = 0.0;
 static bool blinkLight = false;
 
-// Добавяне на допълнителни случайни пътища
-static void AddExtraPaths(int count) {
-    for (int i = 0; i < count; i++) {
-        int x = rand() % GRID_W;
-        int y = rand() % GRID_H;
+static void GenerateMazeDFS(int x, int y) {
+    maze[y][x].topWall = maze[y][x].topWall;
+    maze[y][x].bottomWall = maze[y][x].bottomWall;
+    maze[y][x].leftWall = maze[y][x].leftWall;
+    maze[y][x].rightWall = maze[y][x].rightWall;
 
-        int dirs[4] = { 0,1,2,3 };
-        int r = dirs[rand() % 4];
-
-        int nx = x, ny = y;
-        if (r == 0) ny--;
-        if (r == 1) nx++;
-        if (r == 2) ny++;
-        if (r == 3) nx--;
-
-        if (nx < 0 || nx >= GRID_W || ny < 0 || ny >= GRID_H) continue;
-        maze[y][x] = 0;
-        maze[ny][nx] = 0;
-    }
-}
-
-static void GenerateMaze() {
-    for (int y = 0; y < GRID_H; y++)
-        for (int x = 0; x < GRID_W; x++)
-            maze[y][x] = 1;
-
-    playerX = 0; playerY = 0;
-    maze[0][0] = 0;
+    bool visited[GRID_H][GRID_W] = { false };
+    visited[y][x] = true;
 
     std::vector<Vector2> stack;
-    stack.push_back({ 0,0 });
+    stack.push_back({ (float)x, (float)y });
+
+    int dirs[4] = { 0, 1, 2, 3 }; 
 
     while (!stack.empty()) {
         Vector2 cell = stack.back();
         int cx = (int)cell.x;
         int cy = (int)cell.y;
 
-        std::vector<Vector2> neighbors;
+        std::vector<int> neighbors;
 
-        if (cy - 2 > 0 && maze[cy - 2][cx] == 1) neighbors.push_back({ (float)cx,(float)(cy - 2) });
-        if (cy + 2 < GRID_H && maze[cy + 2][cx] == 1) neighbors.push_back({ (float)cx,(float)(cy + 2) });
-        if (cx - 2 > 0 && maze[cy][cx - 2] == 1) neighbors.push_back({ (float)(cx - 2),(float)cy });
-        if (cx + 2 < GRID_W && maze[cy][cx + 2] == 1) neighbors.push_back({ (float)(cx + 2),(float)cy });
+
+        if (cy > 0 && !visited[cy - 1][cx]) neighbors.push_back(0); // top
+        if (cx < GRID_W - 1 && !visited[cy][cx + 1]) neighbors.push_back(1); // right
+        if (cy < GRID_H - 1 && !visited[cy + 1][cx]) neighbors.push_back(2); // bottom
+        if (cx > 0 && !visited[cy][cx - 1]) neighbors.push_back(3); // left
 
         if (!neighbors.empty()) {
-            Vector2 next = neighbors[rand() % neighbors.size()];
-            int nx = (int)next.x;
-            int ny = (int)next.y;
-            maze[(ny + cy) / 2][(nx + cx) / 2] = 0;
-            maze[ny][nx] = 0;
-            stack.push_back({ (float)nx,(float)ny });
+            int dir = neighbors[rand() % neighbors.size()];
+
+            if (dir == 0) { maze[cy][cx].topWall = false; maze[cy - 1][cx].bottomWall = false; cy--; }
+            else if (dir == 1) { maze[cy][cx].rightWall = false; maze[cy][cx + 1].leftWall = false; cx++; }
+            else if (dir == 2) { maze[cy][cx].bottomWall = false; maze[cy + 1][cx].topWall = false; cy++; }
+            else if (dir == 3) { maze[cy][cx].leftWall = false; maze[cy][cx - 1].rightWall = false; cx--; }
+
+            stack.push_back({ (float)cx, (float)cy });
+            visited[cy][cx] = true;
         }
         else {
             stack.pop_back();
         }
     }
-
-    AddExtraPaths((GRID_W * GRID_H) / 3); // повече объркващи пътища
 }
 
-static void DrawMaze(int cell, int ox, int oy) {
+static void DrawMazeLines(int cell, int ox, int oy) {
     for (int y = 0; y < GRID_H; y++) {
         for (int x = 0; x < GRID_W; x++) {
-            int px = ox + x * cell;
-            int py = oy + y * cell;
-
-            if (maze[y][x] == 1) {
-                DrawRectangle(px, py, cell, cell, DARKGRAY);
-                DrawRectangleLinesEx(Rectangle{ (float)px,(float)py,(float)cell,(float)cell }, 1, RAYWHITE);
-            }
+            int sx = ox + x * cell;
+            int sy = oy + y * cell;
+            if (maze[y][x].topWall) DrawLine(sx, sy, sx + cell, sy, WHITE);
+            if (maze[y][x].leftWall) DrawLine(sx, sy, sx, sy + cell, WHITE);
+            if (maze[y][x].rightWall) DrawLine(sx + cell, sy, sx + cell, sy + cell, WHITE);
+            if (maze[y][x].bottomWall) DrawLine(sx, sy + cell, sx + cell, sy + cell, WHITE);
         }
     }
 
-    DrawRectangle(ox + endX * cell, oy + endY * cell, cell, cell, GREEN);
+    DrawRectangle(ox + endX * cell + 2, oy + endY * cell + 2, cell - 4, cell - 4, GREEN);
 }
 
 void StartMediumGame() {
-    srand((unsigned int)time(0)); // предупреждение C4244 избегнато
-    GenerateMaze();
+    srand((unsigned int)time(0));
+    GenerateMazeDFS(0, 0);
 
     const int screenWidth = 720;
     const int screenHeight = 720;
@@ -114,30 +103,26 @@ void StartMediumGame() {
 
     while (!WindowShouldClose()) {
         blinkTimer += GetFrameTime();
-        if (blinkTimer >= 0.5) {
-            blinkTimer = 0;
-            blinkLight = !blinkLight;
+        if (!blinkLight && blinkTimer >= 4.5) {
+            blinkTimer = 0.0;
+            blinkLight = true;
+        }
+        else if (blinkLight && blinkTimer >= 123.5) {
+            blinkTimer = 0.0;
+            blinkLight = false;
         }
 
-        if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) {
-            if (playerY > 0 && maze[playerY - 1][playerX] == 0) playerY--;
-        }
-        if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) {
-            if (playerY < GRID_H - 1 && maze[playerY + 1][playerX] == 0) playerY++;
-        }
-        if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) {
-            if (playerX > 0 && maze[playerY][playerX - 1] == 0) playerX--;
-        }
-        if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) {
-            if (playerX < GRID_W - 1 && maze[playerY][playerX + 1] == 0) playerX++;
-        }
+        if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !maze[playerY][playerX].topWall) playerY--;
+        if ((IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) && !maze[playerY][playerX].bottomWall) playerY++;
+        if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[playerY][playerX].leftWall) playerX--;
+        if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[playerY][playerX].rightWall) playerX++;
 
         BeginDrawing();
         ClearBackground(BLACK);
 
         if (blinkLight) {
-            DrawMaze(cell, offsetX, offsetY);
-            DrawRectangle(offsetX + playerX * cell, offsetY + playerY * cell, cell, cell, YELLOW);
+            DrawMazeLines(cell, offsetX, offsetY);
+            DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
         }
 
         EndDrawing();
