@@ -33,30 +33,6 @@
     <ClCompile Include="gameMedium.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\raudio.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\rcore.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\rglfw.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\rmodels.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\rshapes.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\rtext.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\rtextures.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\raylib\raylib\src\utils.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">

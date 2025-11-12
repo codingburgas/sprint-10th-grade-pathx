@@ -100,13 +100,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\sprint-10th-grade-pathx\raylib\raylib\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\PC\Documents\ivka\sprint-math-games-9th-grade-netsky-main\sprint-math-games-9th-grade-netsky-main\Netsky\vendor\raylib\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\PC\Documents\ivka\sprint-math-games-9th-grade-netsky-main\sprint-math-games-9th-grade-netsky-main\Netsky\vendor\raylib\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -124,14 +126,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\raylib\raylib\src\raudio.c" />
-    <ClCompile Include="..\raylib\raylib\src\rcore.c" />
-    <ClCompile Include="..\raylib\raylib\src\rglfw.c" />
-    <ClCompile Include="..\raylib\raylib\src\rmodels.c" />
-    <ClCompile Include="..\raylib\raylib\src\rshapes.c" />
-    <ClCompile Include="..\raylib\raylib\src\rtext.c" />
-    <ClCompile Include="..\raylib\raylib\src\rtextures.c" />
-    <ClCompile Include="..\raylib\raylib\src\utils.c" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameEasy.cpp" />
     <ClCompile Include="gameHard.cpp" />
