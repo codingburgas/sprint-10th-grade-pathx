@@ -1,2 +1,1 @@
-﻿LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  sprint-10th-grade-pathx.vcxproj -> D:\proektna noemv\sprint-10th-grade-pathx\sprint-10th-grade-pathx\x64\Debug\sprint-10th-grade-pathx.exe
+﻿  sprint-10th-grade-pathx.vcxproj -> D:\proektna noemv\sprint-10th-grade-pathx\sprint-10th-grade-pathx\x64\Debug\sprint-10th-grade-pathx.exe

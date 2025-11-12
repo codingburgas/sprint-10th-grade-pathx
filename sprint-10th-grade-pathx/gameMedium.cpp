@@ -21,6 +21,11 @@ static int playerY = 0;
 static int endX = GRID_W - 1;
 static int endY = GRID_H - 1;
 
+static bool gameStarted = false;
+static bool reachedEnd = false;
+static float startTime = 0.0f;
+static float elapsedTime = 0.0f;
+
 static double blinkTimer = 0.0;
 static bool blinkLight = false;
 
@@ -36,7 +41,7 @@ static void GenerateMazeDFS(int x, int y) {
     std::vector<Vector2> stack;
     stack.push_back({ (float)x, (float)y });
 
-    int dirs[4] = { 0, 1, 2, 3 }; 
+    int dirs[4] = { 0, 1, 2, 3 };
 
     while (!stack.empty()) {
         Vector2 cell = stack.back();
@@ -44,7 +49,6 @@ static void GenerateMazeDFS(int x, int y) {
         int cy = (int)cell.y;
 
         std::vector<int> neighbors;
-
 
         if (cy > 0 && !visited[cy - 1][cx]) neighbors.push_back(0); // top
         if (cx < GRID_W - 1 && !visited[cy][cx + 1]) neighbors.push_back(1); // right
@@ -101,7 +105,15 @@ void StartMediumGame() {
     int offsetX = (screenWidth - cell * GRID_W) / 2;
     int offsetY = (screenHeight - cell * GRID_H) / 2;
 
+    playerX = 0;
+    playerY = 0;
+    gameStarted = false;
+    reachedEnd = false;
+    startTime = 0.0f;
+    elapsedTime = 0.0f;
+
     while (!WindowShouldClose()) {
+
         blinkTimer += GetFrameTime();
         if (!blinkLight && blinkTimer >= 4.5) {
             blinkTimer = 0.0;
@@ -112,10 +124,20 @@ void StartMediumGame() {
             blinkLight = false;
         }
 
+        if (gameStarted) {
+            elapsedTime = (float)GetTime() - startTime;
+        }
+
         if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !maze[playerY][playerX].topWall) playerY--;
         if ((IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) && !maze[playerY][playerX].bottomWall) playerY++;
         if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[playerY][playerX].leftWall) playerX--;
         if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[playerY][playerX].rightWall) playerX++;
+
+        if (!gameStarted && (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D) ||
+            IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_RIGHT))) {
+            gameStarted = true;
+            startTime = (float)GetTime();
+        }
 
         BeginDrawing();
         ClearBackground(BLACK);
@@ -124,6 +146,14 @@ void StartMediumGame() {
             DrawMazeLines(cell, offsetX, offsetY);
             DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
         }
+
+        int totalSeconds = (int)elapsedTime;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        DrawText("TIME:", screenWidth / 2 - 160, 20, 40, WHITE);
+        DrawText(TextFormat("%02d:%02d", minutes, seconds),
+            screenWidth / 2 - 50, 20, 40, WHITE);
 
         EndDrawing();
 

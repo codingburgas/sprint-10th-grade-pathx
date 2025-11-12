@@ -8,7 +8,10 @@ struct Cell { bool visited, topWall, bottomWall, leftWall, rightWall; };
 
 static Cell maze[GRID_W][GRID_H];
 static int px = 0, py = 0, endX = GRID_W - 1, endY = GRID_H - 1;
-
+static bool gameStarted = false;
+static bool reachedEnd = false;
+static float startTime = 0.0f;
+static float elapsedTime = 0.0f;
 static void InitializeMaze() {
     for (int x = 0; x < GRID_W; x++)
         for (int y = 0; y < GRID_H; y++)
@@ -78,14 +81,39 @@ void StartEasyGame() {
     px = 0; py = 0;
     bool win = false;
 
+    gameStarted = false;
+    reachedEnd = false;
+    startTime = 0.0f;
+    elapsedTime = 0.0f;
+
+
     while (!WindowShouldClose()) {
         if (!win) MovePlayer();
+
+        if (!gameStarted && (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))) {
+            gameStarted = true;
+            startTime = (float)GetTime();
+        }
+
         if (px == endX && py == endY) win = true;
 
         BeginDrawing();
+
         ClearBackground(BLACK);
         DrawMaze(cellSize, ox, oy);
         DrawCircle(ox + px * cellSize + cellSize / 2, oy + py * cellSize + cellSize / 2, cellSize / 3, YELLOW);
+        if (gameStarted && !reachedEnd) {
+            elapsedTime = (float)GetTime() - startTime;
+        }
+        int totalSeconds = (int)elapsedTime;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        DrawText("TIME:", GRID_W / 2 - 160, 40, 50, WHITE);
+        DrawText(TextFormat("%02d:%02d", minutes, seconds),
+            GRID_W / 2 - 10, 40, 50, WHITE);
+
+
         if (win) {
             DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
             DrawText("Press ESC to return", sw / 2 - 140, sh / 2 + 20, 30, RAYWHITE);

@@ -9,6 +9,12 @@ struct Cell {
 
 static Cell maze[GRID_W][GRID_H];
 static int px = 0, py = 0, endX = GRID_W - 1, endY = GRID_H - 1;
+
+// Timer variables
+static bool gameStarted = false;
+static float startTime = 0.0f;
+static float elapsedTime = 0.0f;
+
 static void InitializeMaze() {
     for (int x = 0; x < GRID_W; x++)
         for (int y = 0; y < GRID_H; y++)
@@ -44,6 +50,7 @@ static void GenerateMaze(int x, int y) {
         GenerateMaze(nx, ny);
     }
 }
+
 static void DrawMaze(int cellSize, int ox, int oy) {
     for (int x = 0; x < GRID_W; x++)
         for (int y = 0; y < GRID_H; y++) {
@@ -63,6 +70,13 @@ static void MovePlayer() {
     if (IsKeyPressed(KEY_S) && !maze[px][py].bottomWall && py < GRID_H - 1) py++;
     if (IsKeyPressed(KEY_A) && !maze[px][py].leftWall && px > 0) px--;
     if (IsKeyPressed(KEY_D) && !maze[px][py].rightWall && px < GRID_W - 1) px++;
+
+    // Start the game timer on first movement
+    if (!gameStarted && (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D) ||
+        IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_RIGHT))) {
+        gameStarted = true;
+        startTime = (float)GetTime();
+    }
 }
 
 void StartHardGame() {
@@ -78,6 +92,11 @@ void StartHardGame() {
     px = 0; py = 0;
     bool win = false;
 
+    // Reset timer variables
+    gameStarted = false;
+    startTime = 0.0f;
+    elapsedTime = 0.0f;
+
     RenderTexture2D darkness = LoadRenderTexture(sw, sh);
     RenderTexture2D mazeTexture = LoadRenderTexture(sw, sh);
     float visionRadius = 60.0f;
@@ -88,6 +107,11 @@ void StartHardGame() {
     EndTextureMode();
 
     while (!WindowShouldClose()) {
+        // Update game timer if game has started
+        if (gameStarted && !win) {
+            elapsedTime = (float)GetTime() - startTime;
+        }
+
         if (!win) MovePlayer();
         if (px == endX && py == endY) win = true;
 
@@ -119,6 +143,14 @@ void StartHardGame() {
             WHITE
         );
         DrawCircle(ox + px * cellSize + cellSize / 2, oy + py * cellSize + cellSize / 2, cellSize / 3, YELLOW);
+
+        // Format and display the timer
+        int totalSeconds = (int)elapsedTime;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        DrawText("TIME:", sw / 2 - 160, 20, 40, WHITE);
+        DrawText(TextFormat("%02d:%02d", minutes, seconds), sw / 2 - 50, 20, 40, WHITE);
 
         if (win) {
             DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
