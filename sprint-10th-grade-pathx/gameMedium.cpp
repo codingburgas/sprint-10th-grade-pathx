@@ -107,7 +107,7 @@ void StartMediumGame() {
             blinkTimer = 0.0;
             blinkLight = true;
         }
-        else if (blinkLight && blinkTimer >= 123.5) {
+        else if (blinkLight && blinkTimer >= 2.0) {
             blinkTimer = 0.0;
             blinkLight = false;
         }
