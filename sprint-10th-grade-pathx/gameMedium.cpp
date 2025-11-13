@@ -15,6 +15,7 @@ struct Cell {
 
 static Cell maze[GRID_H][GRID_W];
 static bool coins[GRID_H][GRID_W] = { false }; // Coin array
+static int coinsCollected = 0;
 static int totalCoins = 0;
 
 static int playerX = 0;
@@ -33,7 +34,7 @@ static bool blinkLight = false;
 
 // Initialize coins in the maze
 static void InitializeCoins() {
-
+    coinsCollected = 0;
     totalCoins = 0;
 
     // Reset all coins
@@ -123,6 +124,18 @@ static void DrawMazeLines(int cell, int ox, int oy) {
     DrawRectangle(ox + endX * cell + 2, oy + endY * cell + 2, cell - 4, cell - 4, GREEN);
 }
 
+// Separate function to draw coin counter
+static void DrawCoinCounter() {
+    // Background for coin counter
+    DrawRectangle(440, 45, 250, 40, Fade(BLACK, 0.7f));
+
+    // Coin icon
+    DrawCircle(450, 65, 12, YELLOW);
+
+    // Coin counter text
+    DrawText("COINS:", 470, 50, 30, WHITE);
+    DrawText(TextFormat("%d/%d", coinsCollected, totalCoins), 600, 50, 30, YELLOW);
+}
 
 void StartMediumGame() {
     srand((unsigned int)time(0));
@@ -178,7 +191,7 @@ void StartMediumGame() {
         // Collect coin if player moved to a new cell with a coin
         if ((playerX != oldX || playerY != oldY) && coins[playerY][playerX]) {
             coins[playerY][playerX] = false;
-
+            coinsCollected++;
         }
 
         if (!gameStarted && (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D) ||
@@ -193,15 +206,31 @@ void StartMediumGame() {
         if (blinkLight) {
             DrawMazeLines(cell, offsetX, offsetY);
             DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
+
+            int totalSeconds = (int)elapsedTime;
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+
+            // Draw time counter
+            DrawText("TIME:", 440, 0, 40, WHITE);
+            DrawText(TextFormat("%02d:%02d", minutes, seconds), 560, 0, 40, WHITE);
+
+            // Draw coin counter ONLY when maze is visible
+            DrawCoinCounter();
         }
+        // Always show timer and coin counter, even when screen is black
+        else {
+            int totalSeconds = (int)elapsedTime;
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
 
-        int totalSeconds = (int)elapsedTime;
-        int minutes = totalSeconds / 60;
-        int seconds = totalSeconds % 60;
+            // Draw time counter
+            DrawText("TIME:", 440, 0, 40, WHITE);
+            DrawText(TextFormat("%02d:%02d", minutes, seconds), 560, 0, 40, WHITE);
 
-        // Draw time counter
-        DrawText("TIME:", 440, 0, 40, WHITE);
-        DrawText(TextFormat("%02d:%02d", minutes, seconds), 560, 0, 40, WHITE);
+            // Draw coin counter
+            DrawCoinCounter();
+        }
 
         EndDrawing();
 

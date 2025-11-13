@@ -10,7 +10,7 @@ struct Cell {
 static Cell maze[GRID_W][GRID_H];
 static bool coins[GRID_W][GRID_H] = { false }; // Coin array
 static int totalCoins = 0;
-
+static int coinsCollected = 0;
 static int px = 0, py = 0, endX = GRID_W - 1, endY = GRID_H - 1;
 
 // Timer variables
@@ -20,7 +20,7 @@ static float elapsedTime = 0.0f;
 
 // Initialize coins in the maze
 static void InitializeCoins() {
-
+    coinsCollected = 0; // Reset collected coins too!
     totalCoins = 0;
 
     // Reset all coins
@@ -83,7 +83,7 @@ static void GenerateMaze(int x, int y) {
     }
 }
 
-static void DrawMaze(int cellSize, int ox, int oy) {
+static void DrawMaze(int cellSize, int ox, int oy, bool drawCoins) {
     for (int x = 0; x < GRID_W; x++)
         for (int y = 0; y < GRID_H; y++) {
             int sx = ox + x * cellSize;
@@ -93,8 +93,8 @@ static void DrawMaze(int cellSize, int ox, int oy) {
             if (maze[x][y].rightWall) DrawLine(sx + cellSize, sy, sx + cellSize, sy + cellSize, WHITE);
             if (maze[x][y].bottomWall) DrawLine(sx, sy + cellSize, sx + cellSize, sy + cellSize, WHITE);
 
-            // Draw coin if it exists and hasn't been collected
-            if (coins[x][y]) {
+            // Draw coin if it exists and hasn't been collected, AND if we're supposed to draw coins
+            if (drawCoins && coins[x][y]) {
                 DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 6, YELLOW);
             }
         }
@@ -102,6 +102,18 @@ static void DrawMaze(int cellSize, int ox, int oy) {
     DrawRectangle(ox + endX * cellSize + 5, oy + endY * cellSize + 5, cellSize - 10, cellSize - 10, RED);
 }
 
+// Separate function to draw coin counter
+static void DrawCoinCounter() {
+    // Background for coin counter
+    DrawRectangle(510, 45, 200, 40, Fade(BLACK, 0.7f));
+
+    // Coin icon
+    DrawCircle(520, 65, 12, YELLOW);
+
+    // Coin counter text
+    DrawText("COINS:", 540, 50, 30, WHITE);
+    DrawText(TextFormat("%d/%d", coinsCollected, totalCoins), 650, 50, 30, YELLOW);
+}
 
 static void MovePlayer() {
     int oldX = px, oldY = py; // Store old position for coin collection
@@ -114,7 +126,7 @@ static void MovePlayer() {
     // Collect coin if player moved to a new cell with a coin
     if ((px != oldX || py != oldY) && coins[px][py]) {
         coins[px][py] = false;
-
+        coinsCollected++; // You were missing this line!
     }
 
     // Start the game timer on first movement
@@ -148,10 +160,24 @@ void StartHardGame() {
     RenderTexture2D mazeTexture = LoadRenderTexture(sw, sh);
     float visionRadius = 60.0f;
 
-    // Draw the maze with coins to the texture
+    // Draw the static maze walls to the texture (without coins)
     BeginTextureMode(mazeTexture);
     ClearBackground(BLACK);
-    DrawMaze(cellSize, ox, oy);
+
+    // Draw only the maze walls, not the coins
+    for (int x = 0; x < GRID_W; x++)
+        for (int y = 0; y < GRID_H; y++) {
+            int sx = ox + x * cellSize;
+            int sy = oy + y * cellSize;
+            if (maze[x][y].topWall) DrawLine(sx, sy, sx + cellSize, sy, WHITE);
+            if (maze[x][y].leftWall) DrawLine(sx, sy, sx, sy + cellSize, WHITE);
+            if (maze[x][y].rightWall) DrawLine(sx + cellSize, sy, sx + cellSize, sy + cellSize, WHITE);
+            if (maze[x][y].bottomWall) DrawLine(sx, sy + cellSize, sx + cellSize, sy + cellSize, WHITE);
+        }
+
+    // Draw the end point
+    DrawRectangle(ox + endX * cellSize + 5, oy + endY * cellSize + 5, cellSize - 10, cellSize - 10, RED);
+
     EndTextureMode();
 
     while (!WindowShouldClose()) {
@@ -178,13 +204,24 @@ void StartHardGame() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        // Draw the pre-rendered maze with coins
+        // Draw the pre-rendered maze (walls only)
         DrawTextureRec(
             mazeTexture.texture,
             Rectangle{ 0, 0, (float)mazeTexture.texture.width, (float)-mazeTexture.texture.height },
             Vector2{ 0, 0 },
             WHITE
         );
+
+        // Draw coins dynamically (so they can disappear when collected)
+        for (int x = 0; x < GRID_W; x++) {
+            for (int y = 0; y < GRID_H; y++) {
+                if (coins[x][y]) {
+                    int sx = ox + x * cellSize;
+                    int sy = oy + y * cellSize;
+                    DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 6, YELLOW);
+                }
+            }
+        }
 
         // Apply darkness effect
         DrawTextureRec(
@@ -205,7 +242,15 @@ void StartHardGame() {
         DrawText("TIME:", 510, 0, 40, WHITE);
         DrawText(TextFormat("%02d:%02d", minutes, seconds), 630, 0, 40, WHITE);
 
-     
+        // Draw coin counter - INSIDE the BeginDrawing/EndDrawing block
+        DrawCoinCounter();
+
+        if (win) {
+            DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
+            DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins), sw / 2 - 100, sh / 2 + 20, 30, YELLOW);
+            DrawText("Press ESC to return", sw / 2 - 140, sh / 2 + 60, 30, RAYWHITE);
+        }
+
         EndDrawing();
 
         if (IsKeyPressed(KEY_ESCAPE)) break;

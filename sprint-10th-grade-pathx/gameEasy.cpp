@@ -13,6 +13,7 @@ static bool reachedEnd = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
 static bool coins[GRID_W][GRID_H]; // Track coins in each cell
+static int coinsCollected = 0;
 static int totalCoins = 0;
 
 static void InitializeMaze() {
@@ -21,8 +22,10 @@ static void InitializeMaze() {
             maze[x][y] = { false,true,true,true,true };
 }
 
+
 static void InitializeCoins() {
     totalCoins = 0;
+    coinsCollected = 0;
 
     // Initialize all coins to false first
     for (int x = 0; x < GRID_W; x++)
@@ -104,9 +107,9 @@ static void MovePlayer() {
     // Collect coin if player moves to a cell with one
     if (coins[px][py]) {
         coins[px][py] = false;
+        coinsCollected++;
     }
 }
-
 void StartEasyGame() {
     int sw = GetScreenWidth();
     int sh = GetScreenHeight();
@@ -152,11 +155,14 @@ void StartEasyGame() {
 
         DrawText("TIME:", 480, 0, 50, WHITE);
         DrawText(TextFormat("%02d:%02d", minutes, seconds), 630, 0, 50, WHITE);
+        DrawText("COINS:", 480, 60, 30, WHITE);
+        DrawText(TextFormat("%d/%d", coinsCollected, totalCoins), 630, 60, 30, YELLOW);
+
 
        
         if (win) {
             DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
- 
+            DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins), sw / 2 - 100, sh / 2 + 20, 30, YELLOW);
             DrawText("Press ESC to return", sw / 2 - 140, sh / 2 + 60, 30, RAYWHITE);
         }
         EndDrawing();
