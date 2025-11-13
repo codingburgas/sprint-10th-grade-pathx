@@ -109,9 +109,9 @@ void StartEasyGame() {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
 
-        DrawText("TIME:", GRID_W / 2 - 160, 40, 50, WHITE);
+        DrawText("TIME:", 480, 0, 50, WHITE);
         DrawText(TextFormat("%02d:%02d", minutes, seconds),
-            GRID_W / 2 - 10, 40, 50, WHITE);
+            630, 0, 50, WHITE);
 
 
         if (win) {

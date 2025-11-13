@@ -151,9 +151,9 @@ void StartMediumGame() {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
 
-        DrawText("TIME:", screenWidth / 2 - 160, 20, 40, WHITE);
+        DrawText("TIME:", 440, 0, 40, WHITE);
         DrawText(TextFormat("%02d:%02d", minutes, seconds),
-            screenWidth / 2 - 50, 20, 40, WHITE);
+            560, 0, 40, WHITE);
 
         EndDrawing();
 

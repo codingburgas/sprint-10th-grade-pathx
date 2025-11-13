@@ -149,8 +149,8 @@ void StartHardGame() {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
 
-        DrawText("TIME:", sw / 2 - 160, 20, 40, WHITE);
-        DrawText(TextFormat("%02d:%02d", minutes, seconds), sw / 2 - 50, 20, 40, WHITE);
+        DrawText("TIME:", 510, 0, 40, WHITE);
+        DrawText(TextFormat("%02d:%02d", minutes, seconds), 630, 0, 40, WHITE);
 
         if (win) {
             DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
