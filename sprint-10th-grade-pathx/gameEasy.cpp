@@ -12,10 +12,39 @@ static bool gameStarted = false;
 static bool reachedEnd = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
+static bool coins[GRID_W][GRID_H]; // Track coins in each cell
+static int totalCoins = 0;
+
 static void InitializeMaze() {
     for (int x = 0; x < GRID_W; x++)
         for (int y = 0; y < GRID_H; y++)
             maze[x][y] = { false,true,true,true,true };
+}
+
+static void InitializeCoins() {
+    totalCoins = 0;
+
+    // Initialize all coins to false first
+    for (int x = 0; x < GRID_W; x++)
+        for (int y = 0; y < GRID_H; y++)
+            coins[x][y] = false;
+
+    // Place coins randomly in the maze (about 20% of cells)
+    for (int x = 0; x < GRID_W; x++) {
+        for (int y = 0; y < GRID_H; y++) {
+            // Don't place coins at start or end positions
+            if ((x == 0 && y == 0) || (x == endX && y == endY)) {
+                coins[x][y] = false;
+                continue;
+            }
+
+            // 20% chance to place a coin in this cell
+            if (GetRandomValue(0, 9) == 0) { // 1 in 9 chance
+                coins[x][y] = true;
+                totalCoins++;
+            }
+        }
+    }
 }
 
 static void ShuffleDirs(int d[4]) {
@@ -57,6 +86,11 @@ static void DrawMaze(int cellSize, int ox, int oy) {
             if (maze[x][y].leftWall) DrawLine(sx, sy, sx, sy + cellSize, WHITE);
             if (maze[x][y].rightWall) DrawLine(sx + cellSize, sy, sx + cellSize, sy + cellSize, WHITE);
             if (maze[x][y].bottomWall) DrawLine(sx, sy + cellSize, sx + cellSize, sy + cellSize, WHITE);
+
+            // Draw coin if it exists in this cell and hasn't been collected
+            if (coins[x][y]) {
+                DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 6, YELLOW);
+            }
         }
     DrawRectangle(ox + endX * cellSize + 5, oy + endY * cellSize + 5, cellSize - 10, cellSize - 10, RED);
 }
@@ -66,6 +100,11 @@ static void MovePlayer() {
     if (IsKeyPressed(KEY_S) && !maze[px][py].bottomWall && py < GRID_H - 1) py++;
     if (IsKeyPressed(KEY_A) && !maze[px][py].leftWall && px > 0) px--;
     if (IsKeyPressed(KEY_D) && !maze[px][py].rightWall && px < GRID_W - 1) px++;
+
+    // Collect coin if player moves to a cell with one
+    if (coins[px][py]) {
+        coins[px][py] = false;
+    }
 }
 
 void StartEasyGame() {
@@ -77,6 +116,7 @@ void StartEasyGame() {
 
     InitializeMaze();
     GenerateMaze(0, 0);
+    InitializeCoins();
 
     px = 0; py = 0;
     bool win = false;
@@ -85,7 +125,6 @@ void StartEasyGame() {
     reachedEnd = false;
     startTime = 0.0f;
     elapsedTime = 0.0f;
-
 
     while (!WindowShouldClose()) {
         if (!win) MovePlayer();
@@ -101,22 +140,24 @@ void StartEasyGame() {
 
         ClearBackground(BLACK);
         DrawMaze(cellSize, ox, oy);
-        DrawCircle(ox + px * cellSize + cellSize / 2, oy + py * cellSize + cellSize / 2, cellSize / 3, YELLOW);
+        DrawCircle(ox + px * cellSize + cellSize / 2, oy + py * cellSize + cellSize / 2, cellSize / 3, GREEN);
+
         if (gameStarted && !reachedEnd) {
             elapsedTime = (float)GetTime() - startTime;
         }
+
         int totalSeconds = (int)elapsedTime;
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
 
         DrawText("TIME:", 480, 0, 50, WHITE);
-        DrawText(TextFormat("%02d:%02d", minutes, seconds),
-            630, 0, 50, WHITE);
+        DrawText(TextFormat("%02d:%02d", minutes, seconds), 630, 0, 50, WHITE);
 
-
+       
         if (win) {
             DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
-            DrawText("Press ESC to return", sw / 2 - 140, sh / 2 + 20, 30, RAYWHITE);
+ 
+            DrawText("Press ESC to return", sw / 2 - 140, sh / 2 + 60, 30, RAYWHITE);
         }
         EndDrawing();
 

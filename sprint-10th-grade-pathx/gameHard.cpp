@@ -8,12 +8,44 @@ struct Cell {
 };
 
 static Cell maze[GRID_W][GRID_H];
+static bool coins[GRID_W][GRID_H] = { false }; // Coin array
+static int totalCoins = 0;
+
 static int px = 0, py = 0, endX = GRID_W - 1, endY = GRID_H - 1;
 
 // Timer variables
 static bool gameStarted = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
+
+// Initialize coins in the maze
+static void InitializeCoins() {
+
+    totalCoins = 0;
+
+    // Reset all coins
+    for (int x = 0; x < GRID_W; x++) {
+        for (int y = 0; y < GRID_H; y++) {
+            coins[x][y] = false;
+        }
+    }
+
+    // Place coins randomly (about 20% of cells)
+    for (int x = 0; x < GRID_W; x++) {
+        for (int y = 0; y < GRID_H; y++) {
+            // Don't place coins at start or end positions
+            if ((x == 0 && y == 0) || (x == endX && y == endY)) {
+                continue;
+            }
+
+            // Random chance to place coin (20% probability)
+            if (GetRandomValue(0, 9) == 0) { // 1 in 9 chance
+                coins[x][y] = true;
+                totalCoins++;
+            }
+        }
+    }
+}
 
 static void InitializeMaze() {
     for (int x = 0; x < GRID_W; x++)
@@ -60,16 +92,30 @@ static void DrawMaze(int cellSize, int ox, int oy) {
             if (maze[x][y].leftWall) DrawLine(sx, sy, sx, sy + cellSize, WHITE);
             if (maze[x][y].rightWall) DrawLine(sx + cellSize, sy, sx + cellSize, sy + cellSize, WHITE);
             if (maze[x][y].bottomWall) DrawLine(sx, sy + cellSize, sx + cellSize, sy + cellSize, WHITE);
+
+            // Draw coin if it exists and hasn't been collected
+            if (coins[x][y]) {
+                DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 6, YELLOW);
+            }
         }
 
     DrawRectangle(ox + endX * cellSize + 5, oy + endY * cellSize + 5, cellSize - 10, cellSize - 10, RED);
 }
 
+
 static void MovePlayer() {
+    int oldX = px, oldY = py; // Store old position for coin collection
+
     if (IsKeyPressed(KEY_W) && !maze[px][py].topWall && py > 0) py--;
     if (IsKeyPressed(KEY_S) && !maze[px][py].bottomWall && py < GRID_H - 1) py++;
     if (IsKeyPressed(KEY_A) && !maze[px][py].leftWall && px > 0) px--;
     if (IsKeyPressed(KEY_D) && !maze[px][py].rightWall && px < GRID_W - 1) px++;
+
+    // Collect coin if player moved to a new cell with a coin
+    if ((px != oldX || py != oldY) && coins[px][py]) {
+        coins[px][py] = false;
+
+    }
 
     // Start the game timer on first movement
     if (!gameStarted && (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D) ||
@@ -88,6 +134,7 @@ void StartHardGame() {
 
     InitializeMaze();
     GenerateMaze(0, 0);
+    InitializeCoins(); // Initialize coins after generating maze
 
     px = 0; py = 0;
     bool win = false;
@@ -101,6 +148,7 @@ void StartHardGame() {
     RenderTexture2D mazeTexture = LoadRenderTexture(sw, sh);
     float visionRadius = 60.0f;
 
+    // Draw the maze with coins to the texture
     BeginTextureMode(mazeTexture);
     ClearBackground(BLACK);
     DrawMaze(cellSize, ox, oy);
@@ -115,6 +163,7 @@ void StartHardGame() {
         if (!win) MovePlayer();
         if (px == endX && py == endY) win = true;
 
+        // Update darkness texture
         BeginTextureMode(darkness);
         ClearBackground(BLACK);
         DrawCircleGradient(
@@ -129,6 +178,7 @@ void StartHardGame() {
         BeginDrawing();
         ClearBackground(BLACK);
 
+        // Draw the pre-rendered maze with coins
         DrawTextureRec(
             mazeTexture.texture,
             Rectangle{ 0, 0, (float)mazeTexture.texture.width, (float)-mazeTexture.texture.height },
@@ -136,12 +186,15 @@ void StartHardGame() {
             WHITE
         );
 
+        // Apply darkness effect
         DrawTextureRec(
             darkness.texture,
             Rectangle{ 0, 0, (float)darkness.texture.width, (float)-darkness.texture.height },
             Vector2{ 0, 0 },
             WHITE
         );
+
+        // Draw player
         DrawCircle(ox + px * cellSize + cellSize / 2, oy + py * cellSize + cellSize / 2, cellSize / 3, YELLOW);
 
         // Format and display the timer
@@ -152,11 +205,7 @@ void StartHardGame() {
         DrawText("TIME:", 510, 0, 40, WHITE);
         DrawText(TextFormat("%02d:%02d", minutes, seconds), 630, 0, 40, WHITE);
 
-        if (win) {
-            DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 50, 60, GOLD);
-            DrawText("Press ESC to return", sw / 2 - 140, sh / 2 + 20, 30, RAYWHITE);
-        }
-
+     
         EndDrawing();
 
         if (IsKeyPressed(KEY_ESCAPE)) break;

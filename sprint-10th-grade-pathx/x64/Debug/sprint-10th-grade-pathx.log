@@ -1,2 +1,4 @@
-﻿  gameMedium.cpp
+﻿  gameHard.cpp
+D:\proektna noemv\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameHard.cpp(98,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\proektna noemv\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameHard.cpp(198,99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   sprint-10th-grade-pathx.vcxproj -> D:\proektna noemv\sprint-10th-grade-pathx\x64\Debug\sprint-10th-grade-pathx.exe
