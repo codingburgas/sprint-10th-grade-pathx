@@ -70,6 +70,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib\src;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib\src;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -102,13 +108,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\PC\Documents\ivka\sprint-math-games-9th-grade-netsky-main\sprint-math-games-9th-grade-netsky-main\Netsky\vendor\raylib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\PC\Documents\ivka\sprint-math-games-9th-grade-netsky-main\sprint-math-games-9th-grade-netsky-main\Netsky\vendor\raylib\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>raylib.lib;winmm.lib;gdi32.lib;user32.lib;shell32.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -119,10 +125,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>raylib.lib;winmm.lib;gdi32.lib;user32.lib;shell32.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
