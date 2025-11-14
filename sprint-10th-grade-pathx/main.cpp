@@ -1,4 +1,4 @@
-#include "raylib.h"
+﻿#include "raylib.h"
 #include "gameEasy.h"
 #include "gameMedium.h"
 #include "gameHard.h"
@@ -7,25 +7,33 @@
 enum GameState { STATE_MAIN_MENU, STATE_DIFFICULTY, STATE_EXIT };
 
 int main() {
-
     InitWindow(800, 600, "Maze Game");
     SetTargetFPS(60);
 
     GameState state = STATE_MAIN_MENU;
 
-    while (!WindowShouldClose()) {
+    const float btnWidth = 300.0f;
+    const float btnHeight = 60.0f;
+    const float gap = 40.0f; // gap between the butons
 
+    while (!WindowShouldClose()) {
         int SW = GetScreenWidth();
         int SH = GetScreenHeight();
         Vector2 mouse = GetMousePosition();
 
-        Rectangle btnPlay = { SW / 2 - 150, SH / 2 - 100, 300, 60 };
-        Rectangle btnHelp = { SW / 2 - 150, SH / 2,       300, 60 };
-        Rectangle btnExit = { SW / 2 - 150, SH / 2 + 100, 300, 60 };
+        // --- MAIN MENU BUTTONS ---
+        Rectangle btnPlay = { SW / 2.0f - btnWidth / 2.0f, SH / 2.0f - 100.0f, btnWidth, btnHeight };
+        Rectangle btnHelp = { SW / 2.0f - btnWidth / 2.0f, SH / 2.0f,       btnWidth, btnHeight };
+        Rectangle btnExit = { SW / 2.0f - btnWidth / 2.0f, SH / 2.0f + 100.0f, btnWidth, btnHeight };
 
-        Rectangle btnEasy = { SW / 2 - 150, SH / 2 - 120, 300, 60 };
-        Rectangle btnMedium = { SW / 2 - 150, SH / 2 - 20,  300, 60 };
-        Rectangle btnHard = { SW / 2 - 150, SH / 2 + 80,  300, 60 };
+        // --- DIFFICULTY BUTTONS ---
+        const int btnCount = 3; // easy, medium, hard
+        float startY = SH / 2.0f - (btnCount * btnHeight + (btnCount - 1) * gap) / 2.0f;
+
+        Rectangle difficultyButtons[btnCount];
+        difficultyButtons[0] = { SW / 2.0f - btnWidth / 2.0f, startY + 0 * (btnHeight + gap), btnWidth, btnHeight }; // Easy
+        difficultyButtons[1] = { SW / 2.0f - btnWidth / 2.0f, startY + 1 * (btnHeight + gap), btnWidth, btnHeight }; // Medium
+        difficultyButtons[2] = { SW / 2.0f - btnWidth / 2.0f, startY + 2 * (btnHeight + gap), btnWidth, btnHeight }; // Hard
 
         switch (state) {
 
@@ -38,6 +46,7 @@ int main() {
 
             BeginDrawing();
             ClearBackground(BLACK);
+
             DrawText("MAZE GAME", SW / 2 - 250, SH / 2 - 240, 80, WHITE);
 
             DrawRectangleRec(btnPlay, DARKGRAY);
@@ -54,9 +63,9 @@ int main() {
 
         case STATE_DIFFICULTY:
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                if (CheckCollisionPointRec(mouse, btnEasy))   StartEasyGame();
-                if (CheckCollisionPointRec(mouse, btnMedium)) StartMediumGame();
-                if (CheckCollisionPointRec(mouse, btnHard))   StartHardGame();
+                if (CheckCollisionPointRec(mouse, difficultyButtons[0])) StartEasyGame();
+                if (CheckCollisionPointRec(mouse, difficultyButtons[1])) StartMediumGame();
+                if (CheckCollisionPointRec(mouse, difficultyButtons[2])) StartHardGame();
             }
             if (IsKeyPressed(KEY_ESCAPE)) state = STATE_MAIN_MENU;
 
@@ -65,14 +74,14 @@ int main() {
 
             DrawText("CHOOSE DIFFICULTY", SW / 2 - 330, SH / 2 - 260, 60, WHITE);
 
-            DrawRectangleRec(btnEasy, DARKGRAY);
-            DrawText("EASY", btnEasy.x + 100, btnEasy.y + 10, 40, GREEN);
-
-            DrawRectangleRec(btnMedium, DARKGRAY);
-            DrawText("MEDIUM", btnMedium.x + 80, btnMedium.y + 10, 40, YELLOW);
-
-            DrawRectangleRec(btnHard, DARKGRAY);
-            DrawText("HARD", btnHard.x + 100, btnHard.y + 10, 40, RED);
+            const char* labels[btnCount] = { "EASY", "MEDIUM", "HARD" };
+            Color colors[btnCount] = { GREEN, YELLOW, RED };
+            for (int i = 0; i < btnCount; ++i) {
+                DrawRectangleRec(difficultyButtons[i], DARKGRAY);
+                int textX = (int)(difficultyButtons[i].x + (btnWidth / 2.0f - MeasureText(labels[i], 40) / 2.0f));
+                int textY = (int)(difficultyButtons[i].y + 10.0f);
+                DrawText(labels[i], textX, textY, 40, colors[i]);
+            }
 
             EndDrawing();
             break;

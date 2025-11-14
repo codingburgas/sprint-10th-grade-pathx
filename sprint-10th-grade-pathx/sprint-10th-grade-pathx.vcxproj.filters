@@ -33,6 +33,12 @@
     <ClCompile Include="gameMedium.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gameDoorMaze.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameDoorMaze.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">

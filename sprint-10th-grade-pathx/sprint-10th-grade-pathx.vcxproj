@@ -136,6 +136,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gameDoorMaze.cpp" />
+    <ClCompile Include="gameDoorMaze.h" />
     <ClCompile Include="gameEasy.cpp" />
     <ClCompile Include="gameHard.cpp" />
     <ClCompile Include="gameMedium.cpp" />
