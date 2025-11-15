@@ -71,7 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib\src;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\User\Documents\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\User\Documents\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib\src;$(IncludePath)</IncludePath>
