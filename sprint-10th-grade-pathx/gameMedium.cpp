@@ -150,7 +150,7 @@ void StartMediumGame() {
 
         blinkTimer += GetFrameTime();
         if (!blinkLight && blinkTimer >= 4.5) { blinkTimer = 0; blinkLight = true; }
-        else if (blinkLight && blinkTimer >= 123.0) { blinkTimer = 0; blinkLight = false; }
+        else if (blinkLight && blinkTimer >= 2.5) { blinkTimer = 0; blinkLight = false; }
 
         if (gameStarted)
             elapsedTime = (float)GetTime() - startTime;

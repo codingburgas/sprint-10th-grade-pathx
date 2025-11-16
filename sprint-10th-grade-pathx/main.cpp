@@ -4,7 +4,7 @@
 #include "gameHard.h"
 #include "help.h"
 #include "gameDoorMaze.h"
-#include "gameSecMaze.h" 
+#include "gameSecMaze.h"
 
 enum GameState { STATE_MAIN_MENU, STATE_DIFFICULTY, STATE_EXIT };
 
@@ -21,9 +21,9 @@ int main() {
 
     const float btnWidth = 300.0f;
     const float btnHeight = 60.0f;
-    const float gap = 40.0f;
+    const float gap = 60.0f; // Увеличено разстояние между бутоните
 
-    const int btnCount = 5;   // EASY, MEDIUM, HARD, DOOR GAME, ESCAPE
+    const int btnCount = 5; // EASY, MEDIUM, HARD, DOOR GAME, ESCAPE
 
     while (!WindowShouldClose()) {
         int SW = GetScreenWidth();
@@ -31,24 +31,22 @@ int main() {
 
         Vector2 mouse = GetMousePosition();
 
-        // Main menu
+        // Main menu buttons
         Rectangle btnPlay = { SW / 2.0f - btnWidth / 2, SH / 2 - 100, btnWidth, btnHeight };
         Rectangle btnHelp = { SW / 2.0f - btnWidth / 2, SH / 2.0f,      btnWidth, btnHeight };
         Rectangle btnExit = { SW / 2.0f - btnWidth / 2, SH / 2 + 100, btnWidth, btnHeight };
 
         // Difficulty buttons
         float startY = SH / 2.0f - (btnCount * btnHeight + (btnCount - 1) * gap) / 2.0f;
-
         Rectangle difficultyButtons[btnCount] = {
-          { SW / 2.0f - btnWidth / 2, startY + 0 * (btnHeight + gap), btnWidth, btnHeight },
-          { SW / 2.0f - btnWidth / 2, startY + 1 * (btnHeight + gap), btnWidth, btnHeight },
-          { SW / 2.0f - btnWidth / 2, startY + 2 * (btnHeight + gap), btnWidth, btnHeight },
-          { SW / 2.0f - btnWidth / 2, startY + 3 * (btnHeight + gap), btnWidth, btnHeight },
-          { SW / 2.0f - btnWidth / 2, startY + 4 * (btnHeight + gap), btnWidth, btnHeight }  // ESCAPE
+            { SW / 2.0f - btnWidth / 2, startY + 0 * (btnHeight + gap), btnWidth, btnHeight },
+            { SW / 2.0f - btnWidth / 2, startY + 1 * (btnHeight + gap), btnWidth, btnHeight },
+            { SW / 2.0f - btnWidth / 2, startY + 2 * (btnHeight + gap), btnWidth, btnHeight },
+            { SW / 2.0f - btnWidth / 2, startY + 3 * (btnHeight + gap), btnWidth, btnHeight },
+            { SW / 2.0f - btnWidth / 2, startY + 4 * (btnHeight + gap), btnWidth, btnHeight }
         };
 
         switch (state) {
-
         case STATE_MAIN_MENU: {
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                 if (CheckCollisionPointRec(mouse, btnHelp)) ShowHelp();
@@ -59,48 +57,48 @@ int main() {
             BeginDrawing();
             ClearBackground(BLACK);
 
-            DrawText("MAZE GAME", SW / 2 - 250, SH / 2 - 240, 80, WHITE);
+            // Заглавие PATH X
+            DrawText("PATH X", SW / 2 - 200, 50, 80, GOLD);
 
             DrawRectangleRec(btnPlay, DARKGRAY);
-            DrawText("PLAY", btnPlay.x + 110, btnPlay.y + 10, 40, GREEN);
+            DrawText("PLAY", btnPlay.x + 110, btnPlay.y + 15, 40, GREEN);
 
             DrawRectangleRec(btnHelp, DARKGRAY);
-            DrawText("HELP", btnHelp.x + 110, btnHelp.y + 10, 40, YELLOW);
+            DrawText("HELP", btnHelp.x + 110, btnHelp.y + 15, 40, YELLOW);
 
             DrawRectangleRec(btnExit, DARKGRAY);
-            DrawText("EXIT", btnExit.x + 110, btnExit.y + 10, 40, RED);
+            DrawText("EXIT", btnExit.x + 110, btnExit.y + 15, 40, RED);
 
             EndDrawing();
         } break;
 
-
         case STATE_DIFFICULTY: {
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-
                 if (CheckCollisionPointRec(mouse, difficultyButtons[0])) StartEasyGame();
                 if (CheckCollisionPointRec(mouse, difficultyButtons[1])) StartMediumGame();
                 if (CheckCollisionPointRec(mouse, difficultyButtons[2])) StartHardGame();
                 if (CheckCollisionPointRec(mouse, difficultyButtons[3])) StartGameDoorMaze();
-                if (CheckCollisionPointRec(mouse, difficultyButtons[4])) StartGameSecMaze(); // NEW ESCAPE MODE
+                if (CheckCollisionPointRec(mouse, difficultyButtons[4])) StartGameSecMaze();
             }
 
             if (IsKeyPressed(KEY_ESCAPE)) state = STATE_MAIN_MENU;
 
             BeginDrawing();
-            ClearBackground(DARKBLUE);
+            ClearBackground(BLACK);
 
-            DrawText("CHOOSE GAME MODE", SW / 2 - 330, SH / 2 - 260, 60, WHITE);
+            // Заглавие PATH X
+            DrawText("PATH X", SW / 2 - 200, 50, 80, GOLD);
 
-            const char* names[btnCount] = { "EASY", "MEDIUM", "HARD", "DOOR GAME", "ESCAPE" };
-            Color colors[btnCount] = { GREEN, YELLOW, RED, ORANGE, PURPLE };
+            DrawText("CHOOSE GAME MODE", SW / 2 - 330, 150, 60, WHITE);
+
+            const char* difficultyNames[btnCount] = { "EASY", "MEDIUM", "HARD", "DOOR GAME", "ESCAPE" };
+            Color difficultyColors[btnCount] = { GREEN, YELLOW, RED, ORANGE, PURPLE };
 
             for (int i = 0; i < btnCount; i++) {
-                DrawRectangleRec(difficultyButtons[i], DARKGRAY);
-
-                int tx = difficultyButtons[i].x + (btnWidth / 2 - MeasureText(names[i], 40) / 2);
+                DrawRectangleRec(difficultyButtons[i], GRAY);
+                int tx = difficultyButtons[i].x + (btnWidth / 2 - MeasureText(difficultyNames[i], 40) / 2);
                 int ty = difficultyButtons[i].y + 10;
-
-                DrawText(names[i], tx, ty, 40, colors[i]);
+                DrawText(difficultyNames[i], tx, ty, 40, difficultyColors[i]);
             }
 
             EndDrawing();
