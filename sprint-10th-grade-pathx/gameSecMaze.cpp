@@ -1,38 +1,29 @@
-﻿#include "gameDoorMaze.h"
+#include "gameSecMaze.h"
 #include <vector>
 #include <cstdlib>
 #include <ctime>
 
-// Maze grid
-Cell maze[GRID_H][GRID_W];
+//maze
+static SecCell maze[SEC_GRID_H][SEC_GRID_W];
 
-// Player instance
-Player player;
+static SecPlayer player;
 
-// Ending cell
-int endX = GRID_W - 1;
-int endY = GRID_H - 1;
+// grids end
+static int endX = SEC_GRID_W - 1;
+static int endY = SEC_GRID_H - 1;
+static float startTime = 0.0f;
+static float elapsedTime = 0.0f;
 
-// Time tracking
-float startTime = 0.0f;
-float elapsedTime = 0.0f;
-
+// creating maze
 static void InitializeMaze() {
-    for (int y = 0; y < GRID_H; y++)
-        for (int x = 0; x < GRID_W; x++)
-            maze[y][x] = Cell{};
+    for (int y = 0; y < SEC_GRID_H; y++)
+        for (int x = 0; x < SEC_GRID_W; x++)
+            maze[y][x] = SecCell{};
 }
 
-static void PlaceDoorsAndItems() {
-    maze[3][3].hasDoor = true;
-    maze[3][3].doorColor = 1;
-
-    maze[1][1].item = KEY_RED;
-    maze[5][5].item = UPGRADE_LIGHT;
-}
-
+// generating maze
 static void GenerateMazeDFS(int x, int y) {
-    bool visited[GRID_H][GRID_W] = { false };
+    bool visited[SEC_GRID_H][SEC_GRID_W] = { false };
     visited[y][x] = true;
 
     std::vector<Vector2> stack;
@@ -45,33 +36,17 @@ static void GenerateMazeDFS(int x, int y) {
 
         std::vector<int> neighbors;
         if (cy > 0 && !visited[cy - 1][cx]) neighbors.push_back(0);
-        if (cx < GRID_W - 1 && !visited[cy][cx + 1]) neighbors.push_back(1);
-        if (cy < GRID_H - 1 && !visited[cy + 1][cx]) neighbors.push_back(2);
+        if (cx < SEC_GRID_W - 1 && !visited[cy][cx + 1]) neighbors.push_back(1);
+        if (cy < SEC_GRID_H - 1 && !visited[cy + 1][cx]) neighbors.push_back(2);
         if (cx > 0 && !visited[cy][cx - 1]) neighbors.push_back(3);
 
         if (!neighbors.empty()) {
             int dir = neighbors[rand() % neighbors.size()];
 
-            if (dir == 0) {
-                maze[cy][cx].topWall = false;
-                maze[cy - 1][cx].bottomWall = false;
-                cy--;
-            }
-            else if (dir == 1) {
-                maze[cy][cx].rightWall = false;
-                maze[cy][cx + 1].leftWall = false;
-                cx++;
-            }
-            else if (dir == 2) {
-                maze[cy][cx].bottomWall = false;
-                maze[cy + 1][cx].topWall = false;
-                cy++;
-            }
-            else if (dir == 3) {
-                maze[cy][cx].leftWall = false;
-                maze[cy][cx - 1].rightWall = false;
-                cx--;
-            }
+            if (dir == 0) { maze[cy][cx].topWall = false; maze[cy - 1][cx].bottomWall = false; cy--; }
+            else if (dir == 1) { maze[cy][cx].rightWall = false; maze[cy][cx + 1].leftWall = false; cx++; }
+            else if (dir == 2) { maze[cy][cx].bottomWall = false; maze[cy + 1][cx].topWall = false; cy++; }
+            else if (dir == 3) { maze[cy][cx].leftWall = false; maze[cy][cx - 1].rightWall = false; cx--; }
 
             stack.push_back({ (float)cx,(float)cy });
             visited[cy][cx] = true;
@@ -82,6 +57,7 @@ static void GenerateMazeDFS(int x, int y) {
     }
 }
 
+// writing the grid lines
 static void DrawCell(int x, int y, int cellSize, int ox, int oy) {
     int sx = ox + x * cellSize;
     int sy = oy + y * cellSize;
@@ -98,22 +74,21 @@ static void DrawCell(int x, int y, int cellSize, int ox, int oy) {
         DrawRectangle(sx + 2, sy + 2, cellSize - 4, cellSize - 4, c);
     }
 
-    if (maze[y][x].item != NONE) {
+    if (maze[y][x].item != SEC_NONE) {
         Color c = YELLOW;
-        if (maze[y][x].item == KEY_RED)   c = RED;
-        if (maze[y][x].item == KEY_BLUE)  c = BLUE;
-        if (maze[y][x].item == KEY_GREEN) c = GREEN;
+        if (maze[y][x].item == SEC_KEY_RED)   c = RED;
+        if (maze[y][x].item == SEC_KEY_BLUE)  c = BLUE;
+        if (maze[y][x].item == SEC_KEY_GREEN) c = GREEN;
         DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 4, c);
     }
 }
 
+// drawing the maze
 static void DrawMaze(int cellSize, int ox, int oy) {
-    for (int y = 0; y < GRID_H; y++)
-        for (int x = 0; x < GRID_W; x++) {
-
+    for (int y = 0; y < SEC_GRID_H; y++)
+        for (int x = 0; x < SEC_GRID_W; x++) {
             int dx = abs(x - player.x);
             int dy = abs(y - player.y);
-
             if (dx + dy <= player.visionRadius)
                 DrawCell(x, y, cellSize, ox, oy);
             else
@@ -124,24 +99,27 @@ static void DrawMaze(int cellSize, int ox, int oy) {
     DrawRectangle(ox + player.x * cellSize, oy + player.y * cellSize, cellSize, cellSize, YELLOW);
 }
 
-void StartGameDoorMaze() {
+// starting the game
+void StartGameSecMaze() {
     srand((unsigned int)time(0));
 
     InitializeMaze();
     GenerateMazeDFS(0, 0);
-    PlaceDoorsAndItems();
 
     const int screenWidth = 640;
     const int screenHeight = 640;
-    InitWindow(screenWidth, screenHeight, "GameDoorMaze");
+    InitWindow(screenWidth, screenHeight, "Escape Maze");
     SetTargetFPS(60);
 
-    int cellSize = screenWidth / GRID_W;
-    int offsetX = (screenWidth - cellSize * GRID_W) / 2;
-    int offsetY = (screenHeight - cellSize * GRID_H) / 2;
+    int cellSize = screenWidth / SEC_GRID_W;
+    int offsetX = (screenWidth - cellSize * SEC_GRID_W) / 2;
+    int offsetY = (screenHeight - cellSize * SEC_GRID_H) / 2;
 
-    player = Player{};
+    player = SecPlayer{};
     startTime = (float)GetTime();
+    elapsedTime = 0.0f;
+
+    const float timeLimit = 30.0f;
 
     while (!WindowShouldClose()) {
         elapsedTime = (float)GetTime() - startTime;
@@ -154,22 +132,6 @@ void StartGameDoorMaze() {
         if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[player.y][player.x].leftWall) player.x--;
         if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[player.y][player.x].rightWall) player.x++;
 
-        if (maze[player.y][player.x].hasDoor) {
-            int color = maze[player.y][player.x].doorColor;
-            if (!player.keys[color - 1]) {
-                player.x = oldX;
-                player.y = oldY;
-            }
-        }
-
-        if (maze[player.y][player.x].item != NONE) {
-            if (maze[player.y][player.x].item == KEY_RED)   player.keys[0] = true;
-            if (maze[player.y][player.x].item == KEY_BLUE)  player.keys[1] = true;
-            if (maze[player.y][player.x].item == KEY_GREEN) player.keys[2] = true;
-            if (maze[player.y][player.x].item == UPGRADE_LIGHT) player.visionRadius++;
-            maze[player.y][player.x].item = NONE;
-        }
-
         BeginDrawing();
         ClearBackground(BLACK);
         DrawMaze(cellSize, offsetX, offsetY);
@@ -178,15 +140,21 @@ void StartGameDoorMaze() {
         EndDrawing();
 
         if (player.x == endX && player.y == endY) break;
+        if (elapsedTime >= timeLimit) break;
     }
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawText("YOU WIN!", 200, 200, 50, GOLD);
+        if (player.x == endX && player.y == endY)
+            DrawText("YOU ESCAPED!", 200, 200, 50, GOLD);
+        else
+            DrawText("TIME UP!", 200, 200, 50, RED);
+
         DrawText(TextFormat("Time: %.1f", elapsedTime), 200, 300, 30, WHITE);
         DrawText("Press ESC to Exit", 200, 400, 20, WHITE);
         EndDrawing();
+
         if (IsKeyPressed(KEY_ESCAPE)) break;
     }
 

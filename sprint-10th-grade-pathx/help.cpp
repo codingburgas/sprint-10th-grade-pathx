@@ -15,15 +15,12 @@ void ShowHelp() {
         int screenWidth = GetScreenWidth();
         int screenHeight = GetScreenHeight();
 
-        // ----- TITLE -----
         const char* title = "HELP MENU";
         int titleWidth = MeasureText(title, fontSizeTitle);
         DrawText(title, screenWidth / 2 - titleWidth / 2, 40, fontSizeTitle, YELLOW);
 
         // Line under the title
         DrawLine(screenWidth / 2 - 200, 85, screenWidth / 2 + 200, 85, YELLOW);
-
-        // ----- SECTION: GAME OBJECTIVE -----
         const char* section1 = "GAME OBJECTIVE:";
         const char* section2 = "CONTROLS:";
         const char* section3 = "LEVELS:";
@@ -37,7 +34,6 @@ void ShowHelp() {
             screenWidth / 2 - MeasureText(objective, fontSizeText) / 2,
             160, fontSizeText, LIGHTGRAY);
 
-        // ----- SECTION: CONTROLS -----
         DrawText(section2,
             screenWidth / 2 - MeasureText(section2, 28) / 2,
             220, 28, WHITE);
@@ -60,7 +56,6 @@ void ShowHelp() {
                 LIGHTGRAY);
         }
 
-        // ----- SECTION: LEVELS -----
         DrawText(section3,
             screenWidth / 2 - MeasureText(section3, 28) / 2,
             440, 28, WHITE);

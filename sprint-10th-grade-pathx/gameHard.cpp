@@ -24,7 +24,6 @@ static bool gameStarted = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
 
-// ---------------- COINS ----------------
 
 // Create coins in random maze cells
 static void InitializeCoins() {
@@ -54,7 +53,6 @@ static void InitializeCoins() {
 }
 
 
-// ---------------- MAZE GENERATION ----------------
 
 // Set all walls on and visited = false
 static void InitializeMaze() {
@@ -102,7 +100,6 @@ static void GenerateMaze(int x, int y) {
 }
 
 
-// ---------------- DRAW MAZE ----------------
 
 // Draw maze walls and coins
 static void DrawMaze(int cellSize, int ox, int oy, bool drawCoins) {
@@ -145,8 +142,6 @@ static void DrawCoinCounter() {
 }
 
 
-// ---------------- PLAYER MOVEMENT ----------------
-
 // Move player and collect coins
 static void MovePlayer() {
     int oldX = px, oldY = py;  // Save old position
@@ -175,8 +170,6 @@ static void MovePlayer() {
     }
 }
 
-
-// ---------------- HARD MODE GAME ----------------
 
 void StartHardGame() {
 
@@ -255,9 +248,6 @@ void StartHardGame() {
         );
 
         EndTextureMode();
-
-        // -------- DRAW EVERYTHING --------
-
         BeginDrawing();
         ClearBackground(BLACK);
 

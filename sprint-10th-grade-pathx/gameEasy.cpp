@@ -38,9 +38,6 @@ enum GameState {
 };
 static GameState state = GAME_PLAYING;
 
-
-// ---------------- MAZE ----------------
-
 // Set all walls on and mark cells unvisited
 static void InitializeMaze() {
     for (int x = 0; x < GRID_W; x++)
@@ -86,10 +83,6 @@ static void GenerateMaze(int x, int y) {
         GenerateMaze(nx, ny);
     }
 }
-
-
-// ---------------- COINS ----------------
-
 // Place coins randomly
 static void InitializeCoins() {
     totalCoins = 0;
@@ -113,9 +106,6 @@ static void InitializeCoins() {
     }
 }
 
-
-// ---------------- DRAW ----------------
-
 // Draw walls, coins, and exit
 static void DrawMaze(int cellSize, int ox, int oy) {
     for (int x = 0; x < GRID_W; x++)
@@ -138,10 +128,6 @@ static void DrawMaze(int cellSize, int ox, int oy) {
     DrawRectangle(ox + endX * cellSize + 5, oy + endY * cellSize + 5,
         cellSize - 10, cellSize - 10, RED);
 }
-
-
-// ---------------- PLAYER ----------------
-
 // Move player and take coins
 static void MovePlayer() {
     if (IsKeyPressed(KEY_W) && !maze[px][py].topWall && py > 0)          py--;
@@ -155,9 +141,6 @@ static void MovePlayer() {
         coinsCollected++;
     }
 }
-
-
-// ---------------- MAIN GAME ----------------
 
 void StartEasyGame() {
 
@@ -182,8 +165,6 @@ void StartEasyGame() {
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
-
-        // -------- PLAYING --------
         if (state == GAME_PLAYING) {
 
             // Start timer when player first moves
@@ -221,9 +202,7 @@ void StartEasyGame() {
             DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins),
                 20, 60, 30, YELLOW);
         }
-
-        // -------- WIN SCREEN --------
-        if (state == GAME_WINSCREEN) {
+       if (state == GAME_WINSCREEN) {
 
             DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 180, 60, GOLD);
             DrawText(TextFormat("Time: %.1f sec", elapsedTime),

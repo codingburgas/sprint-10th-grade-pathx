@@ -1,10 +1,18 @@
-#pragma once
+#ifndef GAME_DOOR_MAZE_H
+#define GAME_DOOR_MAZE_H
+
 #include "raylib.h"
 
-static const int GRID_W = 16;
-static const int GRID_H = 16;
+const int GRID_W = 20;
+const int GRID_H = 20;
 
-enum ItemType { NONE, KEY_RED, KEY_BLUE, KEY_GREEN, UPGRADE_LIGHT };
+enum ItemType {
+    NONE = 0,
+    KEY_RED,
+    KEY_BLUE,
+    KEY_GREEN,
+    UPGRADE_LIGHT
+};
 
 struct Cell {
     bool topWall = true;
@@ -13,16 +21,19 @@ struct Cell {
     bool rightWall = true;
 
     bool hasDoor = false;
-    int doorColor = 0; // 1=red,2=blue,3=green
+    int doorColor = 0;
 
-    ItemType item = NONE; // key or upgrade
+    ItemType item = NONE;
 };
 
 struct Player {
     int x = 0;
     int y = 0;
-    bool keys[3] = { false, false, false }; // red, blue, green
+
+    bool keys[3] = { false, false, false };
     int visionRadius = 3;
 };
 
 void StartGameDoorMaze();
+
+#endif

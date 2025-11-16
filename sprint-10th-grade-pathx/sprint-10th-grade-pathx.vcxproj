@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\User\Documents\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\User\Documents\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib\src;$(IncludePath)</IncludePath>
@@ -109,12 +109,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Home\Desktop\sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>sprint-10th-grade-pathx\raylib\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>raylib.lib;winmm.lib;gdi32.lib;user32.lib;shell32.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -142,6 +142,7 @@
     <ClCompile Include="gameEasy.cpp" />
     <ClCompile Include="gameHard.cpp" />
     <ClCompile Include="gameMedium.cpp" />
+    <ClCompile Include="gameSecMaze.cpp" />
     <ClCompile Include="help.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="gameEasy.h" />
     <ClInclude Include="gameHard.h" />
     <ClInclude Include="gameMedium.h" />
+    <ClInclude Include="gameSecMaze.h" />
     <ClInclude Include="help.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
