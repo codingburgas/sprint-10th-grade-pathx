@@ -6,7 +6,6 @@
 static const int GRID_W = 25;
 static const int GRID_H = 25;
 
-// Maze cell with 4 walls
 struct Cell {
     bool topWall = true;
     bool bottomWall = true;
@@ -15,26 +14,19 @@ struct Cell {
 };
 
 static Cell maze[GRID_H][GRID_W];
-
-// Coin data
 static bool coins[GRID_H][GRID_W] = { false };
 static int coinsCollected = 0;
 static int totalCoins = 0;
 
-// Player position
 static int playerX = 0;
 static int playerY = 0;
-
-// Finish point
 static int endX = GRID_W - 1;
 static int endY = GRID_H - 1;
 
-// Timer
 static bool gameStarted = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
 
-// Light blinking
 static double blinkTimer = 0.0;
 static bool blinkLight = false;
 
@@ -85,9 +77,7 @@ static void GenerateMazeDFS(int x, int y) {
             stack.push_back({ (float)cx, (float)cy });
             visited[cy][cx] = true;
         }
-        else {
-            stack.pop_back();
-        }
+        else stack.pop_back();
     }
 }
 
@@ -112,15 +102,12 @@ static void DrawMazeLines(int cell, int ox, int oy) {
 
 static void DrawCoinCounter(int hudX, int hudY) {
     DrawRectangle(hudX, hudY + 70, 220, 40, Fade(BLACK, 0.7f));
-
     DrawCircle(hudX + 15, hudY + 90, 10, YELLOW);
-
     DrawText("COINS:", hudX + 35, hudY + 75, 25, WHITE);
     DrawText(TextFormat("%d/%d", coinsCollected, totalCoins), hudX + 120, hudY + 75, 25, YELLOW);
 }
 
 void StartMediumGame() {
-
     srand((unsigned int)time(0));
 
     GenerateMazeDFS(0, 0);
@@ -133,7 +120,6 @@ void StartMediumGame() {
     SetTargetFPS(60);
 
     int cell = (screenWidth / GRID_W < screenHeight / GRID_H) ? screenWidth / GRID_W : screenHeight / GRID_H;
-
     int offsetX = (screenWidth - cell * GRID_W) / 2 + 40;
     int offsetY = (screenHeight - cell * GRID_H) / 2;
 
@@ -147,18 +133,11 @@ void StartMediumGame() {
     GameState state = PLAYING;
 
     while (!WindowShouldClose()) {
-
-        blinkTimer += GetFrameTime();
-        if (!blinkLight && blinkTimer >= 4.5) { blinkTimer = 0; blinkLight = true; }
-        else if (blinkLight && blinkTimer >= 2.5) { blinkTimer = 0; blinkLight = false; }
-
         if (gameStarted)
             elapsedTime = (float)GetTime() - startTime;
 
         if (state == PLAYING) {
-
             int oldX = playerX, oldY = playerY;
-
             if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !maze[playerY][playerX].topWall) playerY--;
             if ((IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) && !maze[playerY][playerX].bottomWall) playerY++;
             if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[playerY][playerX].leftWall) playerX--;
@@ -179,24 +158,15 @@ void StartMediumGame() {
             BeginDrawing();
             ClearBackground(BLACK);
 
-            if (blinkLight) {
-                DrawMazeLines(cell, offsetX, offsetY);
-                DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2,
-                    cell - 4, cell - 4, YELLOW);
-            }
+            DrawMazeLines(cell, offsetX, offsetY);
+            DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
 
- 
-            int hudX = 10;
-            int hudY = 10;
+            DrawText("TIME:", 10, 10, 30, WHITE);
+            int minutes = (int)elapsedTime / 60;
+            int seconds = (int)elapsedTime % 60;
+            DrawText(TextFormat("%02d:%02d", minutes, seconds), 10, 40, 30, WHITE);
 
-            int totalSeconds = (int)elapsedTime;
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
-
-            DrawText("TIME:", hudX, hudY, 30, WHITE);
-            DrawText(TextFormat("%02d:%02d", minutes, seconds), hudX, hudY + 30, 30, WHITE);
-
-            DrawCoinCounter(hudX, hudY);
+            DrawCoinCounter(10, 10);
 
             EndDrawing();
 
@@ -204,22 +174,15 @@ void StartMediumGame() {
                 state = WINSCREEN;
         }
         else if (state == WINSCREEN) {
-
             BeginDrawing();
             ClearBackground(BLACK);
-
             DrawText("YOU WIN!", screenWidth / 2 - 150, screenHeight / 2 - 120, 60, GOLD);
-
-            int totalSeconds = (int)elapsedTime;
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
-
+            int minutes = (int)elapsedTime / 60;
+            int seconds = (int)elapsedTime % 60;
             DrawText(TextFormat("Time: %02d:%02d", minutes, seconds), screenWidth / 2 - 100, screenHeight / 2, 40, WHITE);
             DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins), screenWidth / 2 - 100, screenHeight / 2 + 50, 40, YELLOW);
-
             DrawText("Press R to Play Again", screenWidth / 2 - 160, screenHeight / 2 + 120, 30, RAYWHITE);
-            DrawText("Press ESC for Menu", screenWidth / 2 - 140, screenHeight / 2 + 160, 30, RAYWHITE);
-
+            DrawText("Press ESC to Exit", screenWidth / 2 - 140, screenHeight / 2 + 160, 30, RAYWHITE);
             EndDrawing();
 
             if (IsKeyPressed(KEY_R)) {

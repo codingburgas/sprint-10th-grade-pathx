@@ -1,16 +1,5 @@
-﻿  main.cpp
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(35,64): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(35,64): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(37,64): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(37,64): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(64,57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(64,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(67,57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(67,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(70,57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(70,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(99,24): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\main.cpp(100,24): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-x64\Debug\gameDoorMaze.obj : warning LNK4042: object specified more than once; extras ignored
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  gameMedium.cpp
+C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameMedium.cpp(96,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   sprint-10th-grade-pathx.vcxproj -> C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\x64\Debug\sprint-10th-grade-pathx.exe
+  C:\Users\kocet\OneDrive\Desktop\sprint-10th-grade-pathx\sprint-10th-grade-pathx\sound\click.wav
+  1 File(s) copied
