@@ -3,16 +3,18 @@
 #include <cstdlib>
 #include <ctime>
 
-//maze
+// maze
 static SecCell maze[SEC_GRID_H][SEC_GRID_W];
-
 static SecPlayer player;
 
 // grids end
 static int endX = SEC_GRID_W - 1;
 static int endY = SEC_GRID_H - 1;
 static float startTime = 0.0f;
-static float elapsedTime = 0.0f;
+static float remainingTime = 0.0f;
+
+static Sound moveSound;
+static Sound winSound;
 
 // creating maze
 static void InitializeMaze() {
@@ -109,6 +111,11 @@ void StartGameSecMaze() {
     const int screenWidth = 640;
     const int screenHeight = 640;
     InitWindow(screenWidth, screenHeight, "Escape Maze");
+    moveSound = LoadSound("move.wav");
+    SetSoundVolume(moveSound, 1.0f);
+    winSound = LoadSound("win.wav");
+    SetSoundVolume(winSound, 1.0f);
+
     SetTargetFPS(60);
 
     int cellSize = screenWidth / SEC_GRID_W;
@@ -117,12 +124,10 @@ void StartGameSecMaze() {
 
     player = SecPlayer{};
     startTime = (float)GetTime();
-    elapsedTime = 0.0f;
-
-    const float timeLimit = 30.0f;
+    const float timeLimit = 40.0f;
 
     while (!WindowShouldClose()) {
-        elapsedTime = (float)GetTime() - startTime;
+        remainingTime = timeLimit - ((float)GetTime() - startTime);
 
         int oldX = player.x;
         int oldY = player.y;
@@ -132,15 +137,22 @@ void StartGameSecMaze() {
         if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[player.y][player.x].leftWall) player.x--;
         if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[player.y][player.x].rightWall) player.x++;
 
+        if (player.x != oldX || player.y != oldY) {
+            PlaySound(moveSound);
+        }
+
+        if (player.x == endX && player.y == endY) {
+            PlaySound(winSound);
+            break;
+        }
+        if (remainingTime <= 0) break;
+
         BeginDrawing();
         ClearBackground(BLACK);
         DrawMaze(cellSize, offsetX, offsetY);
 
-        DrawText(TextFormat("Time: %.1f", elapsedTime), 10, 10, 20, WHITE);
+        DrawText(TextFormat("Time: %.1f", remainingTime), 10, 10, 20, WHITE);
         EndDrawing();
-
-        if (player.x == endX && player.y == endY) break;
-        if (elapsedTime >= timeLimit) break;
     }
 
     while (!WindowShouldClose()) {
@@ -151,12 +163,15 @@ void StartGameSecMaze() {
         else
             DrawText("TIME UP!", 200, 200, 50, RED);
 
-        DrawText(TextFormat("Time: %.1f", elapsedTime), 200, 300, 30, WHITE);
+        DrawText(TextFormat("Time: %.1f", remainingTime > 0 ? remainingTime : 0), 200, 300, 30, WHITE);
         DrawText("Press ESC to Exit", 200, 400, 20, WHITE);
         EndDrawing();
 
         if (IsKeyPressed(KEY_ESCAPE)) break;
     }
+
+    UnloadSound(moveSound);
+    UnloadSound(winSound);
 
     CloseWindow();
 }

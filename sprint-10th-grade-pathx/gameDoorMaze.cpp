@@ -17,6 +17,10 @@ int endY = GRID_H - 1;
 float startTime = 0.0f;
 float elapsedTime = 0.0f;
 
+// Sounds
+Sound itemSound;
+Sound winSound;
+
 static void InitializeMaze() {
     for (int y = 0; y < GRID_H; y++)
         for (int x = 0; x < GRID_W; x++)
@@ -127,6 +131,12 @@ static void DrawMaze(int cellSize, int ox, int oy) {
 void StartGameDoorMaze() {
     srand((unsigned int)time(0));
 
+    // Load sounds
+    itemSound = LoadSound("item.wav");  // Събиране на ключ/ъпгрейд
+    SetSoundVolume(itemSound, 1.0f);
+    winSound = LoadSound("win.wav");    // Достигане на финала
+    SetSoundVolume(winSound, 1.0f);
+
     InitializeMaze();
     GenerateMazeDFS(0, 0);
     PlaceDoorsAndItems();
@@ -168,6 +178,8 @@ void StartGameDoorMaze() {
             if (maze[player.y][player.x].item == KEY_GREEN) player.keys[2] = true;
             if (maze[player.y][player.x].item == UPGRADE_LIGHT) player.visionRadius++;
             maze[player.y][player.x].item = NONE;
+
+            PlaySound(itemSound); // <- пускане на звук при събиране
         }
 
         BeginDrawing();
@@ -177,7 +189,10 @@ void StartGameDoorMaze() {
         DrawText(TextFormat("Time: %.1f", elapsedTime), 10, 10, 20, WHITE);
         EndDrawing();
 
-        if (player.x == endX && player.y == endY) break;
+        if (player.x == endX && player.y == endY) {
+            PlaySound(winSound); // <- пускане на звук при победа
+            break;
+        }
     }
 
     while (!WindowShouldClose()) {
@@ -189,6 +204,10 @@ void StartGameDoorMaze() {
         EndDrawing();
         if (IsKeyPressed(KEY_ESCAPE)) break;
     }
+
+    // Unload sounds
+    UnloadSound(itemSound);
+    UnloadSound(winSound);
 
     CloseWindow();
 }

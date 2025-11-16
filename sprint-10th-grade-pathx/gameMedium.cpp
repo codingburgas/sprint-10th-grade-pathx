@@ -27,6 +27,14 @@ static bool gameStarted = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
 
+// Sounds
+static Sound coinSound;
+static Sound winSound;
+
+// Blinking background
+static float blinkTimer = 0.0f;
+static bool blinkState = false; // false = dark, true = light
+
 static void InitializeCoins() {
     coinsCollected = 0;
     totalCoins = 0;
@@ -106,6 +114,13 @@ static void DrawCoinCounter(int hudX, int hudY) {
 
 void StartMediumGame() {
     srand((unsigned int)time(0));
+
+    // Load sounds
+    coinSound = LoadSound("coins.wav");
+    SetSoundVolume(coinSound, 1.0f);
+    winSound = LoadSound("win.wav");
+    SetSoundVolume(winSound, 1.0f);
+
     GenerateMazeDFS(0, 0);
     InitializeCoins();
 
@@ -124,14 +139,30 @@ void StartMediumGame() {
     startTime = 0.0f;
     elapsedTime = 0.0f;
 
+    blinkTimer = 0.0f;
+    blinkState = false;
+
     enum GameState { PLAYING, WINSCREEN };
     GameState state = PLAYING;
 
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_ESCAPE)) break; 
+        if (IsKeyPressed(KEY_ESCAPE)) break;
 
+        // Update elapsed time
         if (gameStarted)
             elapsedTime = (float)GetTime() - startTime;
+
+        // Update blinking timer
+        blinkTimer += GetFrameTime();
+        if (!blinkState && blinkTimer >= 4.0f) {
+            blinkState = true;
+            blinkTimer = 0.0f;
+        }
+        else if (blinkState && blinkTimer >= 2.5f) {
+
+            blinkState = false;
+            blinkTimer = 0.0f;
+        }
 
         if (state == PLAYING) {
             int oldX = playerX, oldY = playerY;
@@ -140,9 +171,11 @@ void StartMediumGame() {
             if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[playerY][playerX].leftWall) playerX--;
             if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[playerY][playerX].rightWall) playerX++;
 
+            // Collect coin + play sound
             if ((playerX != oldX || playerY != oldY) && coins[playerY][playerX]) {
                 coins[playerY][playerX] = false;
                 coinsCollected++;
+                PlaySound(coinSound);
             }
 
             if (!gameStarted &&
@@ -153,7 +186,9 @@ void StartMediumGame() {
             }
 
             BeginDrawing();
-            ClearBackground(BLACK);
+            if (blinkState) ClearBackground(LIGHTGRAY);
+            else ClearBackground(BLACK);
+
             DrawMazeLines(cell, offsetX, offsetY);
             DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
 
@@ -165,8 +200,11 @@ void StartMediumGame() {
             DrawCoinCounter(10, 10);
             EndDrawing();
 
-            if (playerX == endX && playerY == endY)
+            // Check win
+            if (playerX == endX && playerY == endY) {
                 state = WINSCREEN;
+                PlaySound(winSound);
+            }
         }
         else if (state == WINSCREEN) {
             BeginDrawing();
@@ -186,4 +224,8 @@ void StartMediumGame() {
             }
         }
     }
+
+    // Unload sounds
+    UnloadSound(coinSound);
+    UnloadSound(winSound);
 }
