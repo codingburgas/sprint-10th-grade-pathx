@@ -27,9 +27,6 @@ static bool gameStarted = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
 
-static double blinkTimer = 0.0;
-static bool blinkLight = false;
-
 static void InitializeCoins() {
     coinsCollected = 0;
     totalCoins = 0;
@@ -109,18 +106,16 @@ static void DrawCoinCounter(int hudX, int hudY) {
 
 void StartMediumGame() {
     srand((unsigned int)time(0));
-
     GenerateMazeDFS(0, 0);
     InitializeCoins();
 
-    const int screenWidth = 720;
-    const int screenHeight = 720;
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
 
-    InitWindow(screenWidth, screenHeight, "Maze - Medium");
     SetTargetFPS(60);
 
     int cell = (screenWidth / GRID_W < screenHeight / GRID_H) ? screenWidth / GRID_W : screenHeight / GRID_H;
-    int offsetX = (screenWidth - cell * GRID_W) / 2 + 40;
+    int offsetX = (screenWidth - cell * GRID_W) / 2;
     int offsetY = (screenHeight - cell * GRID_H) / 2;
 
     playerX = 0;
@@ -133,6 +128,8 @@ void StartMediumGame() {
     GameState state = PLAYING;
 
     while (!WindowShouldClose()) {
+        if (IsKeyPressed(KEY_ESCAPE)) break; 
+
         if (gameStarted)
             elapsedTime = (float)GetTime() - startTime;
 
@@ -157,7 +154,6 @@ void StartMediumGame() {
 
             BeginDrawing();
             ClearBackground(BLACK);
-
             DrawMazeLines(cell, offsetX, offsetY);
             DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
 
@@ -167,7 +163,6 @@ void StartMediumGame() {
             DrawText(TextFormat("%02d:%02d", minutes, seconds), 10, 40, 30, WHITE);
 
             DrawCoinCounter(10, 10);
-
             EndDrawing();
 
             if (playerX == endX && playerY == endY)
@@ -182,18 +177,13 @@ void StartMediumGame() {
             DrawText(TextFormat("Time: %02d:%02d", minutes, seconds), screenWidth / 2 - 100, screenHeight / 2, 40, WHITE);
             DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins), screenWidth / 2 - 100, screenHeight / 2 + 50, 40, YELLOW);
             DrawText("Press R to Play Again", screenWidth / 2 - 160, screenHeight / 2 + 120, 30, RAYWHITE);
-            DrawText("Press ESC to Exit", screenWidth / 2 - 140, screenHeight / 2 + 160, 30, RAYWHITE);
+            DrawText("Press ESC to Return to Menu", screenWidth / 2 - 200, screenHeight / 2 + 160, 30, RAYWHITE);
             EndDrawing();
 
             if (IsKeyPressed(KEY_R)) {
-                CloseWindow();
                 StartMediumGame();
                 return;
             }
-
-            if (IsKeyPressed(KEY_ESCAPE)) break;
         }
     }
-
-    CloseWindow();
 }

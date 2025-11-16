@@ -28,7 +28,6 @@ int main() {
     const float gap = 60.0f;
     const int btnCount = 5;
 
-    // Местим масивите извън switch
     const char* difficultyNames[btnCount] = { "EASY", "MEDIUM", "HARD", "DOOR GAME", "ESCAPE" };
     Color difficultyColors[btnCount] = { GREEN, YELLOW, RED, ORANGE, PURPLE };
 
@@ -37,12 +36,10 @@ int main() {
         int SH = GetScreenHeight();
         Vector2 mouse = GetMousePosition();
 
-        // Main menu buttons
         Rectangle btnPlay = { float(SW) / 2.0f - btnWidth / 2, float(SH) / 2 - 100.0f, btnWidth, btnHeight };
         Rectangle btnHelp = { float(SW) / 2.0f - btnWidth / 2, float(SH) / 2.0f, btnWidth, btnHeight };
         Rectangle btnExit = { float(SW) / 2.0f - btnWidth / 2, float(SH) / 2 + 100.0f, btnWidth, btnHeight };
 
-        // Difficulty buttons
         float startY = float(SH) / 2.0f - (btnCount * btnHeight + (btnCount - 1) * gap) / 2.0f;
         Rectangle difficultyButtons[btnCount] = {
             { float(SW) / 2.0f - btnWidth / 2, startY + 0 * (btnHeight + gap), btnWidth, btnHeight },
