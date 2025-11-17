@@ -28,6 +28,13 @@ static float elapsedTime = 0.0f;
 static Sound coinSound;
 static Sound winSound;
 
+// Global variable to return coins to main menu
+static int lastGameCoins = 0;
+
+int GetHardGameCoins() {
+    return lastGameCoins;
+}
+
 // Create coins in random maze cells
 static void InitializeCoins() {
     coinsCollected = 0; // Reset collected coins
@@ -176,6 +183,7 @@ void StartHardGame() {
     px = 0; py = 0;
     bool win = false;
     gameStarted = false; startTime = 0; elapsedTime = 0;
+    lastGameCoins = 0; // Reset for this session
 
     RenderTexture2D darkness = LoadRenderTexture(sw, sh);
     RenderTexture2D mazeTexture = LoadRenderTexture(sw, sh);
@@ -205,6 +213,7 @@ void StartHardGame() {
         // Check win
         if (px == endX && py == endY && !win) {
             win = true;
+            lastGameCoins = coinsCollected; // Store coins collected in this game
             PlaySound(winSound); // <- sound
         }
 

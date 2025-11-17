@@ -1,8 +1,8 @@
 #ifndef GAME_DOOR_MAZE_H
 #define GAME_DOOR_MAZE_H
-
 #include "raylib.h"
 
+int GetDoorMazeCoins();
 const int GRID_W = 20;
 const int GRID_H = 20;
 

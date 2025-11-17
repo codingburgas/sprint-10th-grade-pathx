@@ -20,6 +20,38 @@ float elapsedTime = 0.0f;
 // Sounds
 Sound itemSound;
 Sound winSound;
+Sound coinSound;
+
+// Coin system
+static bool coins[GRID_H][GRID_W] = { false };
+static int coinsCollected = 0;
+static int totalCoins = 0;
+
+// Global variable to return coins to main menu
+static int lastGameCoins = 0;
+
+int GetDoorMazeCoins() {
+    return lastGameCoins;
+}
+
+static void InitializeCoins() {
+    coinsCollected = 0;
+    totalCoins = 0;
+
+    for (int y = 0; y < GRID_H; y++)
+        for (int x = 0; x < GRID_W; x++)
+            coins[y][x] = false;
+
+    for (int y = 0; y < GRID_H; y++) {
+        for (int x = 0; x < GRID_W; x++) {
+            if ((x == 0 && y == 0) || (x == endX && y == endY)) continue;
+            if (rand() % 100 < 15) { // 15% chance for coins
+                coins[y][x] = true;
+                totalCoins++;
+            }
+        }
+    }
+}
 
 static void InitializeMaze() {
     for (int y = 0; y < GRID_H; y++)
@@ -109,6 +141,11 @@ static void DrawCell(int x, int y, int cellSize, int ox, int oy) {
         if (maze[y][x].item == KEY_GREEN) c = GREEN;
         DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 4, c);
     }
+
+    // Draw coins
+    if (coins[y][x]) {
+        DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 6, YELLOW);
+    }
 }
 
 static void DrawMaze(int cellSize, int ox, int oy) {
@@ -128,18 +165,28 @@ static void DrawMaze(int cellSize, int ox, int oy) {
     DrawRectangle(ox + player.x * cellSize, oy + player.y * cellSize, cellSize, cellSize, YELLOW);
 }
 
+static void DrawCoinCounter() {
+    DrawRectangle(10, 40, 200, 30, Fade(BLACK, 0.7f));
+    DrawCircle(20, 55, 8, YELLOW);
+    DrawText("COINS:", 35, 45, 20, WHITE);
+    DrawText(TextFormat("%d/%d", coinsCollected, totalCoins), 100, 45, 20, YELLOW);
+}
+
 void StartGameDoorMaze() {
     srand((unsigned int)time(0));
 
     // Load sounds
-    itemSound = LoadSound("item.wav");  // Събиране на ключ/ъпгрейд
+    itemSound = LoadSound("item.wav");
     SetSoundVolume(itemSound, 1.0f);
-    winSound = LoadSound("win.wav");    // Достигане на финала
+    winSound = LoadSound("win.wav");
     SetSoundVolume(winSound, 1.0f);
+    coinSound = LoadSound("coins.wav");
+    SetSoundVolume(coinSound, 1.0f);
 
     InitializeMaze();
     GenerateMazeDFS(0, 0);
     PlaceDoorsAndItems();
+    InitializeCoins();
 
     const int screenWidth = 640;
     const int screenHeight = 640;
@@ -152,6 +199,7 @@ void StartGameDoorMaze() {
 
     player = Player{};
     startTime = (float)GetTime();
+    lastGameCoins = 0; // Reset for this session
 
     while (!WindowShouldClose()) {
         elapsedTime = (float)GetTime() - startTime;
@@ -163,6 +211,13 @@ void StartGameDoorMaze() {
         if ((IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) && !maze[player.y][player.x].bottomWall) player.y++;
         if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[player.y][player.x].leftWall) player.x--;
         if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[player.y][player.x].rightWall) player.x++;
+
+        // Collect coins
+        if ((player.x != oldX || player.y != oldY) && coins[player.y][player.x]) {
+            coins[player.y][player.x] = false;
+            coinsCollected++;
+            PlaySound(coinSound);
+        }
 
         if (maze[player.y][player.x].hasDoor) {
             int color = maze[player.y][player.x].doorColor;
@@ -179,7 +234,7 @@ void StartGameDoorMaze() {
             if (maze[player.y][player.x].item == UPGRADE_LIGHT) player.visionRadius++;
             maze[player.y][player.x].item = NONE;
 
-            PlaySound(itemSound); // <- пускане на звук при събиране
+            PlaySound(itemSound);
         }
 
         BeginDrawing();
@@ -187,10 +242,13 @@ void StartGameDoorMaze() {
         DrawMaze(cellSize, offsetX, offsetY);
 
         DrawText(TextFormat("Time: %.1f", elapsedTime), 10, 10, 20, WHITE);
+        DrawCoinCounter();
+
         EndDrawing();
 
         if (player.x == endX && player.y == endY) {
-            PlaySound(winSound); // <- пускане на звук при победа
+            lastGameCoins = coinsCollected; // Store coins collected in this game
+            PlaySound(winSound);
             break;
         }
     }
@@ -199,8 +257,9 @@ void StartGameDoorMaze() {
         BeginDrawing();
         ClearBackground(BLACK);
         DrawText("YOU WIN!", 200, 200, 50, GOLD);
-        DrawText(TextFormat("Time: %.1f", elapsedTime), 200, 300, 30, WHITE);
-        DrawText("Press ESC to Exit", 200, 400, 20, WHITE);
+        DrawText(TextFormat("Time: %.1f", elapsedTime), 200, 270, 30, WHITE);
+        DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins), 200, 310, 30, YELLOW);
+        DrawText("Press ESC to Exit", 200, 360, 20, WHITE);
         EndDrawing();
         if (IsKeyPressed(KEY_ESCAPE)) break;
     }
@@ -208,6 +267,7 @@ void StartGameDoorMaze() {
     // Unload sounds
     UnloadSound(itemSound);
     UnloadSound(winSound);
+    UnloadSound(coinSound);
 
     CloseWindow();
 }

@@ -1,4 +1,7 @@
-#ifndef GAME_EASY_H
-#define GAME_EASY_H
+#ifndef GAMEEASY_H
+#define GAMEEASY_H
+
 void StartEasyGame();
+int GetEasyGameCoins();
+
 #endif

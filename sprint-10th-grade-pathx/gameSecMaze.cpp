@@ -15,6 +15,38 @@ static float remainingTime = 0.0f;
 
 static Sound moveSound;
 static Sound winSound;
+static Sound coinSound;
+
+// Coin system
+static bool coins[SEC_GRID_H][SEC_GRID_W] = { false };
+static int coinsCollected = 0;
+static int totalCoins = 0;
+
+// Global variable to return coins to main menu
+static int lastGameCoins = 0;
+
+int GetSecMazeCoins() {
+    return lastGameCoins;
+}
+
+static void InitializeCoins() {
+    coinsCollected = 0;
+    totalCoins = 0;
+
+    for (int y = 0; y < SEC_GRID_H; y++)
+        for (int x = 0; x < SEC_GRID_W; x++)
+            coins[y][x] = false;
+
+    for (int y = 0; y < SEC_GRID_H; y++) {
+        for (int x = 0; x < SEC_GRID_W; x++) {
+            if ((x == 0 && y == 0) || (x == endX && y == endY)) continue;
+            if (rand() % 100 < 15) { // 15% chance for coins
+                coins[y][x] = true;
+                totalCoins++;
+            }
+        }
+    }
+}
 
 // creating maze
 static void InitializeMaze() {
@@ -83,6 +115,11 @@ static void DrawCell(int x, int y, int cellSize, int ox, int oy) {
         if (maze[y][x].item == SEC_KEY_GREEN) c = GREEN;
         DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 4, c);
     }
+
+    // Draw coins
+    if (coins[y][x]) {
+        DrawCircle(sx + cellSize / 2, sy + cellSize / 2, cellSize / 6, YELLOW);
+    }
 }
 
 // drawing the maze
@@ -101,12 +138,20 @@ static void DrawMaze(int cellSize, int ox, int oy) {
     DrawRectangle(ox + player.x * cellSize, oy + player.y * cellSize, cellSize, cellSize, YELLOW);
 }
 
+static void DrawCoinCounter() {
+    DrawRectangle(10, 40, 200, 30, Fade(BLACK, 0.7f));
+    DrawCircle(20, 55, 8, YELLOW);
+    DrawText("COINS:", 35, 45, 20, WHITE);
+    DrawText(TextFormat("%d/%d", coinsCollected, totalCoins), 100, 45, 20, YELLOW);
+}
+
 // starting the game
 void StartGameSecMaze() {
     srand((unsigned int)time(0));
 
     InitializeMaze();
     GenerateMazeDFS(0, 0);
+    InitializeCoins();
 
     const int screenWidth = 640;
     const int screenHeight = 640;
@@ -115,6 +160,8 @@ void StartGameSecMaze() {
     SetSoundVolume(moveSound, 1.0f);
     winSound = LoadSound("win.wav");
     SetSoundVolume(winSound, 1.0f);
+    coinSound = LoadSound("coins.wav");
+    SetSoundVolume(coinSound, 1.0f);
 
     SetTargetFPS(60);
 
@@ -125,6 +172,7 @@ void StartGameSecMaze() {
     player = SecPlayer{};
     startTime = (float)GetTime();
     const float timeLimit = 40.0f;
+    lastGameCoins = 0; // Reset for this session
 
     while (!WindowShouldClose()) {
         remainingTime = timeLimit - ((float)GetTime() - startTime);
@@ -137,11 +185,19 @@ void StartGameSecMaze() {
         if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[player.y][player.x].leftWall) player.x--;
         if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[player.y][player.x].rightWall) player.x++;
 
+        // Collect coins
+        if ((player.x != oldX || player.y != oldY) && coins[player.y][player.x]) {
+            coins[player.y][player.x] = false;
+            coinsCollected++;
+            PlaySound(coinSound);
+        }
+
         if (player.x != oldX || player.y != oldY) {
             PlaySound(moveSound);
         }
 
         if (player.x == endX && player.y == endY) {
+            lastGameCoins = coinsCollected; // Store coins collected in this game
             PlaySound(winSound);
             break;
         }
@@ -152,19 +208,23 @@ void StartGameSecMaze() {
         DrawMaze(cellSize, offsetX, offsetY);
 
         DrawText(TextFormat("Time: %.1f", remainingTime), 10, 10, 20, WHITE);
+        DrawCoinCounter();
         EndDrawing();
     }
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
-        if (player.x == endX && player.y == endY)
+        if (player.x == endX && player.y == endY) {
             DrawText("YOU ESCAPED!", 200, 200, 50, GOLD);
-        else
+            DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins), 200, 270, 30, YELLOW);
+        }
+        else {
             DrawText("TIME UP!", 200, 200, 50, RED);
+        }
 
-        DrawText(TextFormat("Time: %.1f", remainingTime > 0 ? remainingTime : 0), 200, 300, 30, WHITE);
-        DrawText("Press ESC to Exit", 200, 400, 20, WHITE);
+        DrawText(TextFormat("Time: %.1f", remainingTime > 0 ? remainingTime : 0), 200, 320, 30, WHITE);
+        DrawText("Press ESC to Exit", 200, 370, 20, WHITE);
         EndDrawing();
 
         if (IsKeyPressed(KEY_ESCAPE)) break;
@@ -172,6 +232,7 @@ void StartGameSecMaze() {
 
     UnloadSound(moveSound);
     UnloadSound(winSound);
+    UnloadSound(coinSound);
 
     CloseWindow();
 }

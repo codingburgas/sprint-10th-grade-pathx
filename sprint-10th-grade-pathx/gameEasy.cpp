@@ -32,6 +32,13 @@ enum GameState {
 };
 static GameState state = GAME_PLAYING;
 
+// Global variable to return coins to main menu
+static int lastGameCoins = 0;
+
+int GetEasyGameCoins() {
+    return lastGameCoins;
+}
+
 static void InitializeMaze() {
     for (int x = 0; x < GRID_W; x++)
         for (int y = 0; y < GRID_H; y++)
@@ -138,6 +145,7 @@ void StartEasyGame() {
     gameStarted = false;
     reachedEnd = false;
     state = GAME_PLAYING;
+    lastGameCoins = 0; // Reset for this session
 
     coinSound = LoadSound("coins.wav");
     SetSoundVolume(coinSound, 1.0f);
@@ -162,6 +170,7 @@ void StartEasyGame() {
                 reachedEnd = true;
                 state = GAME_WINSCREEN;
                 elapsedTime = GetTime() - startTime;
+                lastGameCoins = coinsCollected; // Store coins collected in this game
                 PlaySound(winSound);
             }
 
@@ -195,6 +204,7 @@ void StartEasyGame() {
                 reachedEnd = false;
                 state = GAME_PLAYING;
                 startTime = elapsedTime = 0.0f;
+                lastGameCoins = 0; // Reset for new game
             }
 
             if (IsKeyPressed(KEY_ESCAPE))

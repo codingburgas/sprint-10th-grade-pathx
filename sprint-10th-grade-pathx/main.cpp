@@ -8,6 +8,9 @@
 
 enum GameState { STATE_MAIN_MENU, STATE_DIFFICULTY, STATE_EXIT };
 
+// Global persistent coin counter
+static int totalCoinsCollected = 0;
+
 int main() {
     int monitor = GetCurrentMonitor();
     int SW_init = GetMonitorWidth(monitor);
@@ -70,23 +73,52 @@ int main() {
 
             BeginDrawing();
             ClearBackground(BLACK);
+
+            // Draw title
             DrawText("PATH X", SW / 2 - 200, 50, 80, GOLD);
+
+            // Draw total coins collected in main menu
+            DrawText(TextFormat("TOTAL COINS COLLECTED: %d", totalCoinsCollected),
+                SW / 2 - 250, 150, 40, YELLOW);
+
+            // Draw buttons
             DrawRectangleRec(btnPlay, DARKGRAY);
             DrawText("PLAY", int(btnPlay.x + 110), int(btnPlay.y + 15), 40, GREEN);
             DrawRectangleRec(btnHelp, DARKGRAY);
             DrawText("HELP", int(btnHelp.x + 110), int(btnHelp.y + 15), 40, YELLOW);
             DrawRectangleRec(btnExit, DARKGRAY);
             DrawText("EXIT", int(btnExit.x + 110), int(btnExit.y + 15), 40, RED);
+
             EndDrawing();
             break;
 
         case STATE_DIFFICULTY:
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                if (CheckCollisionPointRec(mouse, difficultyButtons[0])) { PlaySound(clickSound); StartEasyGame(); }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[1])) { PlaySound(clickSound); StartMediumGame(); }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[2])) { PlaySound(clickSound); StartHardGame(); }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[3])) { PlaySound(clickSound); StartGameDoorMaze(); }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[4])) { PlaySound(clickSound); StartGameSecMaze(); }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[0])) {
+                    PlaySound(clickSound);
+                    StartEasyGame();
+                    totalCoinsCollected += GetEasyGameCoins();
+                }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[1])) {
+                    PlaySound(clickSound);
+                    StartMediumGame();
+                    totalCoinsCollected += GetMediumGameCoins();
+                }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[2])) {
+                    PlaySound(clickSound);
+                    StartHardGame();
+                    totalCoinsCollected += GetHardGameCoins();
+                }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[3])) {
+                    PlaySound(clickSound);
+                    StartGameDoorMaze();
+                    totalCoinsCollected += GetDoorMazeCoins();
+                }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[4])) {
+                    PlaySound(clickSound);
+                    StartGameSecMaze();
+                    totalCoinsCollected += GetSecMazeCoins();
+                }
             }
 
             if (IsKeyPressed(KEY_ESCAPE)) state = STATE_MAIN_MENU;
@@ -95,6 +127,10 @@ int main() {
             ClearBackground(BLACK);
             DrawText("PATH X", SW / 2 - 200, 50, 80, GOLD);
             DrawText("CHOOSE GAME MODE", SW / 2 - 330, 150, 60, WHITE);
+
+            // Show total coins in difficulty selection screen too
+            DrawText(TextFormat("TOTAL COINS: %d", totalCoinsCollected),
+                SW / 2 - 150, 220, 30, YELLOW);
 
             for (int i = 0; i < btnCount; i++) {
                 DrawRectangleRec(difficultyButtons[i], GRAY);

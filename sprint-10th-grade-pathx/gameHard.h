@@ -1,4 +1,7 @@
-#ifndef GAME_HARD_H
-#define GAME_HARD_H
+#ifndef GAMEHARD_H
+#define GAMEHARD_H
+
 void StartHardGame();
+int GetHardGameCoins();
+
 #endif

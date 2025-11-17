@@ -2,6 +2,9 @@
 #define GAME_SEC_MAZE_H
 
 #include "raylib.h"
+
+
+int GetSecMazeCoins();
 static const int SEC_GRID_W = 20;
 static const int SEC_GRID_H = 20;
 

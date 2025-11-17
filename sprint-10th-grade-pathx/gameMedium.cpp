@@ -7,6 +7,7 @@ static const int GRID_W = 25;
 static const int GRID_H = 25;
 
 struct Cell {
+    bool visited = false;
     bool topWall = true;
     bool bottomWall = true;
     bool leftWall = true;
@@ -35,6 +36,13 @@ static Sound winSound;
 static float blinkTimer = 0.0f;
 static bool blinkState = false; // TRUE = blackout
 
+// Global variable to return coins to main menu
+static int lastGameCoins = 0;
+
+int GetMediumGameCoins() {
+    return lastGameCoins;
+}
+
 static void InitializeCoins() {
     coinsCollected = 0;
     totalCoins = 0;
@@ -55,34 +63,66 @@ static void InitializeCoins() {
 }
 
 static void GenerateMazeDFS(int x, int y) {
+    // Reset maze first
+    for (int y = 0; y < GRID_H; y++) {
+        for (int x = 0; x < GRID_W; x++) {
+            maze[y][x] = { false, true, true, true, true };
+        }
+    }
+
     bool visited[GRID_H][GRID_W] = { false };
     std::vector<Vector2> stack;
 
     stack.push_back({ (float)x, (float)y });
     visited[y][x] = true;
+    maze[y][x].visited = true;
 
     while (!stack.empty()) {
-        Vector2 cell = stack.back();
-        int cx = (int)cell.x;
-        int cy = (int)cell.y;
+        Vector2 current = stack.back();
+        int cx = (int)current.x;
+        int cy = (int)current.y;
 
-        std::vector<int> neighbors;
-        if (cy > 0 && !visited[cy - 1][cx]) neighbors.push_back(0);
-        if (cx < GRID_W - 1 && !visited[cy][cx + 1]) neighbors.push_back(1);
-        if (cy < GRID_H - 1 && !visited[cy + 1][cx]) neighbors.push_back(2);
-        if (cx > 0 && !visited[cy][cx - 1]) neighbors.push_back(3);
+        // Check neighbors
+        std::vector<int> directions;
+        if (cy > 0 && !visited[cy - 1][cx]) directions.push_back(0); // Up
+        if (cx < GRID_W - 1 && !visited[cy][cx + 1]) directions.push_back(1); // Right
+        if (cy < GRID_H - 1 && !visited[cy + 1][cx]) directions.push_back(2); // Down
+        if (cx > 0 && !visited[cy][cx - 1]) directions.push_back(3); // Left
 
-        if (!neighbors.empty()) {
-            int dir = neighbors[rand() % neighbors.size()];
-            if (dir == 0) { maze[cy][cx].topWall = false; maze[cy - 1][cx].bottomWall = false; cy--; }
-            else if (dir == 1) { maze[cy][cx].rightWall = false; maze[cy][cx + 1].leftWall = false; cx++; }
-            else if (dir == 2) { maze[cy][cx].bottomWall = false; maze[cy + 1][cx].topWall = false; cy++; }
-            else if (dir == 3) { maze[cy][cx].leftWall = false; maze[cy][cx - 1].rightWall = false; cx--; }
+        if (!directions.empty()) {
+            int dir = directions[rand() % directions.size()];
+            int nx = cx, ny = cy;
 
-            stack.push_back({ (float)cx, (float)cy });
-            visited[cy][cx] = true;
+            switch (dir) {
+            case 0: // Up
+                maze[cy][cx].topWall = false;
+                ny = cy - 1;
+                maze[ny][cx].bottomWall = false;
+                break;
+            case 1: // Right
+                maze[cy][cx].rightWall = false;
+                nx = cx + 1;
+                maze[cy][nx].leftWall = false;
+                break;
+            case 2: // Down
+                maze[cy][cx].bottomWall = false;
+                ny = cy + 1;
+                maze[ny][cx].topWall = false;
+                break;
+            case 3: // Left
+                maze[cy][cx].leftWall = false;
+                nx = cx - 1;
+                maze[cy][nx].rightWall = false;
+                break;
+            }
+
+            visited[ny][nx] = true;
+            maze[ny][nx].visited = true;
+            stack.push_back({ (float)nx, (float)ny });
         }
-        else stack.pop_back();
+        else {
+            stack.pop_back();
+        }
     }
 }
 
@@ -138,6 +178,7 @@ void StartMediumGame() {
     gameStarted = false;
     startTime = 0.0f;
     elapsedTime = 0.0f;
+    lastGameCoins = 0; // Reset for this session
 
     blinkTimer = 0.0f;
     blinkState = false;
@@ -148,8 +189,10 @@ void StartMediumGame() {
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_ESCAPE)) break;
 
-        if (gameStarted)
+        // Update timer only when game is started and playing
+        if (gameStarted && state == PLAYING) {
             elapsedTime = (float)GetTime() - startTime;
+        }
 
         // blackout cycle
         blinkTimer += GetFrameTime();
@@ -191,16 +234,19 @@ void StartMediumGame() {
                 DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
             }
 
-            DrawText("TIME:", 10, 10, 30, WHITE);
+            // Draw timer
+            DrawRectangle(10, 10, 150, 60, Fade(BLACK, 0.7f));
+            DrawText("TIME:", 20, 15, 25, WHITE);
             int minutes = (int)elapsedTime / 60;
             int seconds = (int)elapsedTime % 60;
-            DrawText(TextFormat("%02d:%02d", minutes, seconds), 10, 40, 30, WHITE);
+            DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, 40, 25, WHITE);
 
             DrawCoinCounter(10, 10);
             EndDrawing();
 
             if (playerX == endX && playerY == endY) {
                 state = WINSCREEN;
+                lastGameCoins = coinsCollected; // Store coins collected in this game
                 PlaySound(winSound);
             }
         }
