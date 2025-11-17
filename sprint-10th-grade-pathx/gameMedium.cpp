@@ -31,9 +31,9 @@ static float elapsedTime = 0.0f;
 static Sound coinSound;
 static Sound winSound;
 
-// Blinking background
+// Blinking (dark blackout)
 static float blinkTimer = 0.0f;
-static bool blinkState = false; // false = dark, true = light
+static bool blinkState = false; // TRUE = blackout
 
 static void InitializeCoins() {
     coinsCollected = 0;
@@ -148,18 +148,16 @@ void StartMediumGame() {
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_ESCAPE)) break;
 
-        // Update elapsed time
         if (gameStarted)
             elapsedTime = (float)GetTime() - startTime;
 
-        // Update blinking timer
+        // blackout cycle
         blinkTimer += GetFrameTime();
         if (!blinkState && blinkTimer >= 4.0f) {
             blinkState = true;
             blinkTimer = 0.0f;
         }
         else if (blinkState && blinkTimer >= 2.5f) {
-
             blinkState = false;
             blinkTimer = 0.0f;
         }
@@ -171,7 +169,6 @@ void StartMediumGame() {
             if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[playerY][playerX].leftWall) playerX--;
             if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[playerY][playerX].rightWall) playerX++;
 
-            // Collect coin + play sound
             if ((playerX != oldX || playerY != oldY) && coins[playerY][playerX]) {
                 coins[playerY][playerX] = false;
                 coinsCollected++;
@@ -186,11 +183,13 @@ void StartMediumGame() {
             }
 
             BeginDrawing();
-            if (blinkState) ClearBackground(LIGHTGRAY);
-            else ClearBackground(BLACK);
+            ClearBackground(BLACK);
 
-            DrawMazeLines(cell, offsetX, offsetY);
-            DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
+            // If blackout → show NOTHING
+            if (!blinkState) {
+                DrawMazeLines(cell, offsetX, offsetY);
+                DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
+            }
 
             DrawText("TIME:", 10, 10, 30, WHITE);
             int minutes = (int)elapsedTime / 60;
@@ -200,7 +199,6 @@ void StartMediumGame() {
             DrawCoinCounter(10, 10);
             EndDrawing();
 
-            // Check win
             if (playerX == endX && playerY == endY) {
                 state = WINSCREEN;
                 PlaySound(winSound);
@@ -210,12 +208,19 @@ void StartMediumGame() {
             BeginDrawing();
             ClearBackground(BLACK);
             DrawText("YOU WIN!", screenWidth / 2 - 150, screenHeight / 2 - 120, 60, GOLD);
+
             int minutes = (int)elapsedTime / 60;
             int seconds = (int)elapsedTime % 60;
-            DrawText(TextFormat("Time: %02d:%02d", minutes, seconds), screenWidth / 2 - 100, screenHeight / 2, 40, WHITE);
-            DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins), screenWidth / 2 - 100, screenHeight / 2 + 50, 40, YELLOW);
+
+            DrawText(TextFormat("Time: %02d:%02d", minutes, seconds),
+                screenWidth / 2 - 100, screenHeight / 2, 40, WHITE);
+
+            DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins),
+                screenWidth / 2 - 100, screenHeight / 2 + 50, 40, YELLOW);
+
             DrawText("Press R to Play Again", screenWidth / 2 - 160, screenHeight / 2 + 120, 30, RAYWHITE);
             DrawText("Press ESC to Return to Menu", screenWidth / 2 - 200, screenHeight / 2 + 160, 30, RAYWHITE);
+
             EndDrawing();
 
             if (IsKeyPressed(KEY_R)) {
@@ -225,7 +230,6 @@ void StartMediumGame() {
         }
     }
 
-    // Unload sounds
     UnloadSound(coinSound);
     UnloadSound(winSound);
 }
