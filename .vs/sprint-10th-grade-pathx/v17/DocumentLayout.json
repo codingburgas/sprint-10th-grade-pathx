@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\@proektnadeinost\\sprint-10th-grade-pathx\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|D:\\@proektnadeinost\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "D:\\@proektnadeinost\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp",
+              "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\main.cpp",
+              "ToolTip": "D:\\@proektnadeinost\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp",
+              "RelativeToolTip": "sprint-10th-grade-pathx\\main.cpp",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAAAKUAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-17T20:59:38.83Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
