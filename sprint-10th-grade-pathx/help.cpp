@@ -11,7 +11,6 @@ void ShowHelp() {
         BeginDrawing();
         ClearBackground(DARKGRAY);
 
-        // Get current screen size
         int screenWidth = GetScreenWidth();
         int screenHeight = GetScreenHeight();
 
@@ -19,7 +18,6 @@ void ShowHelp() {
         int titleWidth = MeasureText(title, fontSizeTitle);
         DrawText(title, screenWidth / 2 - titleWidth / 2, 40, fontSizeTitle, YELLOW);
 
-        // Line under the title
         DrawLine(screenWidth / 2 - 200, 85, screenWidth / 2 + 200, 85, YELLOW);
         const char* section1 = "GAME OBJECTIVE:";
         const char* section2 = "CONTROLS:";
@@ -46,7 +44,6 @@ void ShowHelp() {
             "ESC - Return to main menu"
         };
 
-        // Draw each control line centered
         for (int i = 0; i < 5; i++) {
             int textWidth = MeasureText(controls[i], fontSizeText);
             DrawText(controls[i],
@@ -64,9 +61,10 @@ void ShowHelp() {
             "Easy   - Small maze with a simple path.",
             "Medium - Maze where the screen briefly flashes black.",
             "Hard   - Only a small circle around you is visible; the rest is dark."
+            "ESCAPE - You have 35 seconds to escape the maze"
+            "Door Game - Collect the keys, unlock the doors, win."
         };
 
-        // Draw each level description
         for (int i = 0; i < 3; i++) {
             int textWidth = MeasureText(levels[i], fontSizeText);
             DrawText(levels[i],
@@ -78,7 +76,6 @@ void ShowHelp() {
 
         EndDrawing();
 
-        // Leave help menu on ESC
         if (IsKeyPressed(KEY_ESCAPE))
             running = false;
     }

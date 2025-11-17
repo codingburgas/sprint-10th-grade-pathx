@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\help.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\help.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameMedium.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\gameMedium.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -23,6 +27,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "help.cpp",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\help.cpp",
+              "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\help.cpp",
+              "ToolTip": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\help.cpp",
+              "RelativeToolTip": "sprint-10th-grade-pathx\\help.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-17T15:43:47.985Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "gameMedium.cpp",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameMedium.cpp",
               "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\gameMedium.cpp",
@@ -35,7 +52,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "gameEasy.cpp",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameEasy.cpp",
               "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\gameEasy.cpp",
@@ -43,8 +60,7 @@
               "RelativeToolTip": "sprint-10th-grade-pathx\\gameEasy.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-17T15:40:32.626Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-17T15:40:32.626Z"
             }
           ]
         }

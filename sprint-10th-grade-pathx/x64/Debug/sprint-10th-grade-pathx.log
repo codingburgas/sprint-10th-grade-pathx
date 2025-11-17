@@ -1,11 +1,25 @@
-﻿  gameDoorMaze.cpp
-C:\pornoektniiiii oufggffffffffffff\PathX\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameDoorMaze.cpp(110,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  game.cpp
+  gameDoorMaze.cpp
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameDoorMaze.cpp(110,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  gameDoorMaze.h
+  gameEasy.cpp
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameEasy.cpp(156,36): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameEasy.cpp(164,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameEasy.cpp(169,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  gameHard.cpp
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameHard.cpp(118,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameHard.cpp(226,109): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameHard.cpp(230,99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  gameMedium.cpp
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameMedium.cpp(101,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   gameSecMaze.cpp
-C:\pornoektniiiii oufggffffffffffff\PathX\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameSecMaze.cpp(84,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\gameSecMaze.cpp(84,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  help.cpp
+  main.cpp
   Generating Code...
+  LINK : C:\Users\User\Documents\sprint-10th-grade-pathx\x64\Debug\sprint-10th-grade-pathx.exe not found or not built by the last incremental link; performing full link
 x64\Debug\gameDoorMaze.obj : warning LNK4042: object specified more than once; extras ignored
-  sprint-10th-grade-pathx.vcxproj -> C:\pornoektniiiii oufggffffffffffff\PathX\sprint-10th-grade-pathx\x64\Debug\sprint-10th-grade-pathx.exe
-  'pwsh.exe' is not recognized as an internal or external command,
-  operable program or batch file.
-  C:\pornoektniiiii oufggffffffffffff\PathX\sprint-10th-grade-pathx\sprint-10th-grade-pathx\sound\click.wav
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  sprint-10th-grade-pathx.vcxproj -> C:\Users\User\Documents\sprint-10th-grade-pathx\x64\Debug\sprint-10th-grade-pathx.exe
+  C:\Users\User\Documents\sprint-10th-grade-pathx\sprint-10th-grade-pathx\sound\click.wav
   1 File(s) copied
