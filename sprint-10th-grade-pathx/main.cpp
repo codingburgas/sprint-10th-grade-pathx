@@ -20,6 +20,10 @@ int main() {
     SetWindowState(FLAG_FULLSCREEN_MODE);
     SetTargetFPS(60);
 
+    // Load Roboto font from fonts folder
+    Font uiFont = LoadFont("Orbitron-Regular.ttf");
+    SetTextureFilter(uiFont.texture, TEXTURE_FILTER_TRILINEAR);
+
     InitAudioDevice();
     Sound clickSound = LoadSound("click.wav");
     SetSoundVolume(clickSound, 1.0f);
@@ -39,110 +43,82 @@ int main() {
         int SH = GetScreenHeight();
         Vector2 mouse = GetMousePosition();
 
-        // Main menu buttons
-        Rectangle btnPlay = { float(SW) / 2.0f - btnWidth / 2, float(SH) / 2 - 100.0f, btnWidth, btnHeight };
-        Rectangle btnHelp = { float(SW) / 2.0f - btnWidth / 2, float(SH) / 2.0f, btnWidth, btnHeight };
-        Rectangle btnExit = { float(SW) / 2.0f - btnWidth / 2, float(SH) / 2 + 100.0f, btnWidth, btnHeight };
+        Rectangle btnPlay = { float(SW) / 2 - btnWidth / 2, float(SH) / 2 - 100, btnWidth, btnHeight };
+        Rectangle btnHelp = { float(SW) / 2 - btnWidth / 2, float(SH) / 2, btnWidth, btnHeight };
+        Rectangle btnExit = { float(SW) / 2 - btnWidth / 2, float(SH) / 2 + 100, btnWidth, btnHeight };
 
-        // Difficulty buttons
-        float startY = float(SH) / 2.0f - (btnCount * btnHeight + (btnCount - 1) * gap) / 2.0f;
+        float startY = float(SH) / 2 - (btnCount * btnHeight + (btnCount - 1) * gap) / 2;
         Rectangle difficultyButtons[btnCount] = {
-            { float(SW) / 2.0f - btnWidth / 2, startY + 0 * (btnHeight + gap), btnWidth, btnHeight },
-            { float(SW) / 2.0f - btnWidth / 2, startY + 1 * (btnHeight + gap), btnWidth, btnHeight },
-            { float(SW) / 2.0f - btnWidth / 2, startY + 2 * (btnHeight + gap), btnWidth, btnHeight },
-            { float(SW) / 2.0f - btnWidth / 2, startY + 3 * (btnHeight + gap), btnWidth, btnHeight },
-            { float(SW) / 2.0f - btnWidth / 2, startY + 4 * (btnHeight + gap), btnWidth, btnHeight }
+            { float(SW) / 2 - btnWidth / 2, startY + 0 * (btnHeight + gap), btnWidth, btnHeight },
+            { float(SW) / 2 - btnWidth / 2, startY + 1 * (btnHeight + gap), btnWidth, btnHeight },
+            { float(SW) / 2 - btnWidth / 2, startY + 2 * (btnHeight + gap), btnWidth, btnHeight },
+            { float(SW) / 2 - btnWidth / 2, startY + 3 * (btnHeight + gap), btnWidth, btnHeight },
+            { float(SW) / 2 - btnWidth / 2, startY + 4 * (btnHeight + gap), btnWidth, btnHeight }
         };
 
         switch (state) {
+
         case STATE_MAIN_MENU:
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                if (CheckCollisionPointRec(mouse, btnHelp)) {
-                    PlaySound(clickSound);
-                    ShowHelp();
-                }
-                if (CheckCollisionPointRec(mouse, btnExit)) {
-                    PlaySound(clickSound);
-                    state = STATE_EXIT;
-                }
-                if (CheckCollisionPointRec(mouse, btnPlay)) {
-                    PlaySound(clickSound);
-                    state = STATE_DIFFICULTY;
-                }
+                if (CheckCollisionPointRec(mouse, btnHelp)) { PlaySound(clickSound); ShowHelp(); }
+                if (CheckCollisionPointRec(mouse, btnExit)) { PlaySound(clickSound); state = STATE_EXIT; }
+                if (CheckCollisionPointRec(mouse, btnPlay)) { PlaySound(clickSound); state = STATE_DIFFICULTY; }
             }
 
             BeginDrawing();
             ClearBackground(BLACK);
 
-            // Draw title
-            DrawText("PATH X", SW / 2 - 200, 50, 80, GOLD);
+            // Title
+            DrawTextEx(uiFont, "PATH X", { float(SW / 2 - 240), 40 }, 96, 4, GOLD);
 
-            // Draw total coins collected in main menu
-            DrawText(TextFormat("TOTAL COINS COLLECTED: %d", totalCoinsCollected),
-                SW / 2 - 250, 150, 40, YELLOW);
+            // Total coins
+            DrawTextEx(uiFont, TextFormat("TOTAL COINS COLLECTED: %d", totalCoinsCollected),
+                { float(SW / 2 - 250), 150 }, 40, 2, YELLOW);
 
-            // Draw buttons
+            // Buttons
             DrawRectangleRec(btnPlay, DARKGRAY);
-            DrawText("PLAY", int(btnPlay.x + 110), int(btnPlay.y + 15), 40, GREEN);
+            DrawTextEx(uiFont, "PLAY", { btnPlay.x + 95, btnPlay.y + 12 }, 48, 3, GREEN);
+
             DrawRectangleRec(btnHelp, DARKGRAY);
-            DrawText("HELP", int(btnHelp.x + 110), int(btnHelp.y + 15), 40, YELLOW);
+            DrawTextEx(uiFont, "HELP", { btnHelp.x + 95, btnHelp.y + 12 }, 48, 3, YELLOW);
+
             DrawRectangleRec(btnExit, DARKGRAY);
-            DrawText("EXIT", int(btnExit.x + 110), int(btnExit.y + 15), 40, RED);
+            DrawTextEx(uiFont, "EXIT", { btnExit.x + 95, btnExit.y + 12 }, 48, 3, RED);
 
             EndDrawing();
             break;
 
         case STATE_DIFFICULTY:
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                if (CheckCollisionPointRec(mouse, difficultyButtons[0])) {
-                    PlaySound(clickSound);
-                    StartEasyGame();
-                    totalCoinsCollected += GetEasyGameCoins();
-                }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[1])) {
-                    PlaySound(clickSound);
-                    StartMediumGame();
-                    totalCoinsCollected += GetMediumGameCoins();
-                }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[2])) {
-                    PlaySound(clickSound);
-                    StartHardGame();
-                    totalCoinsCollected += GetHardGameCoins();
-                }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[3])) {
-                    PlaySound(clickSound);
-                    StartGameDoorMaze();
-                    totalCoinsCollected += GetDoorMazeCoins();
-                }
-                if (CheckCollisionPointRec(mouse, difficultyButtons[4])) {
-                    PlaySound(clickSound);
-                    StartGameSecMaze();
-                    totalCoinsCollected += GetSecMazeCoins();
-                }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[0])) { PlaySound(clickSound); StartEasyGame();   totalCoinsCollected += GetEasyGameCoins(); }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[1])) { PlaySound(clickSound); StartMediumGame(); totalCoinsCollected += GetMediumGameCoins(); }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[2])) { PlaySound(clickSound); StartHardGame();   totalCoinsCollected += GetHardGameCoins(); }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[3])) { PlaySound(clickSound); StartGameDoorMaze(); totalCoinsCollected += GetDoorMazeCoins(); }
+                if (CheckCollisionPointRec(mouse, difficultyButtons[4])) { PlaySound(clickSound); StartGameSecMaze(); totalCoinsCollected += GetSecMazeCoins(); }
             }
 
             if (IsKeyPressed(KEY_ESCAPE)) state = STATE_MAIN_MENU;
 
             BeginDrawing();
             ClearBackground(BLACK);
-            DrawText("PATH X", SW / 2 - 200, 50, 80, GOLD);
-            DrawText("CHOOSE GAME MODE", SW / 2 - 330, 150, 60, WHITE);
 
-            // Show total coins in difficulty selection screen too
-            DrawText(TextFormat("TOTAL COINS: %d", totalCoinsCollected),
-                SW / 2 - 150, 220, 30, YELLOW);
+            DrawTextEx(uiFont, "PATH X", { float(SW / 2 - 240), 40 }, 96, 4, GOLD);
+            DrawTextEx(uiFont, "CHOOSE GAME MODE", { float(SW / 2 - 330), 150 }, 60, 3, WHITE);
+            DrawTextEx(uiFont, TextFormat("TOTAL COINS: %d", totalCoinsCollected), { float(SW / 2 - 150), 220 }, 36, 2, YELLOW);
 
             for (int i = 0; i < btnCount; i++) {
                 DrawRectangleRec(difficultyButtons[i], GRAY);
-                int tx = int(difficultyButtons[i].x + (btnWidth / 2 - MeasureText(difficultyNames[i], 40) / 2));
-                int ty = int(difficultyButtons[i].y + 10);
-                DrawText(difficultyNames[i], tx, ty, 40, difficultyColors[i]);
+                Vector2 textSize = MeasureTextEx(uiFont, difficultyNames[i], 48, 3);
+                float tx = difficultyButtons[i].x + btnWidth / 2 - textSize.x / 2;
+                DrawTextEx(uiFont, difficultyNames[i], { tx, difficultyButtons[i].y + 8 }, 48, 3, difficultyColors[i]);
             }
+
             EndDrawing();
             break;
 
         case STATE_EXIT:
             UnloadSound(clickSound);
+            UnloadFont(uiFont);
             CloseAudioDevice();
             CloseWindow();
             return 0;
@@ -150,6 +126,7 @@ int main() {
     }
 
     UnloadSound(clickSound);
+    UnloadFont(uiFont);
     CloseAudioDevice();
     CloseWindow();
     return 0;

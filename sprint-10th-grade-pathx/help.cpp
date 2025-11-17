@@ -3,80 +3,87 @@
 
 void ShowHelp() {
     bool running = true;
-    const int fontSizeTitle = 40;
-    const int fontSizeText = 24;
+
+    const int fontTitle = 42;
+    const int fontSection = 30;
+    const int fontText = 24;
+
+    const Color bgColor{ 30, 30, 30, 255 };
+
+    const char* title = "HELP MENU";
+    const char* section1 = "GAME OBJECTIVE";
+    const char* section2 = "CONTROLS";
+    const char* section3 = "LEVELS";
+
+    const char* objective =
+        "Find your way out of the maze using the WASD keys.";
+
+    const char* controls[] = {
+        "W - Move up",
+        "A - Move left",
+        "S - Move down",
+        "D - Move right",
+        "ESC - Return to main menu"
+    };
+
+    const char* levels[] = {
+        "Easy       - Small maze with a simple path.",
+        "Medium     - Maze where the screen briefly flashes black.",
+        "Hard       - Only a small circle around you is visible.",
+        "ESCAPE     - You have 35 seconds to escape the maze.",
+        "Door Game  - Collect the keys, unlock the doors, win."
+    };
 
     while (running && !WindowShouldClose()) {
-
         BeginDrawing();
-        ClearBackground(DARKGRAY);
+        ClearBackground(bgColor);
 
-        int screenWidth = GetScreenWidth();
-        int screenHeight = GetScreenHeight();
+        int screenW = GetScreenWidth();
+        int y = 40;
 
-        const char* title = "HELP MENU";
-        int titleWidth = MeasureText(title, fontSizeTitle);
-        DrawText(title, screenWidth / 2 - titleWidth / 2, 40, fontSizeTitle, YELLOW);
+        // TITLE
+        int titleWidth = MeasureText(title, fontTitle);
+        DrawText(title, screenW / 2 - titleWidth / 2, y, fontTitle, YELLOW);
+        y += 60;
 
-        DrawLine(screenWidth / 2 - 200, 85, screenWidth / 2 + 200, 85, YELLOW);
-        const char* section1 = "GAME OBJECTIVE:";
-        const char* section2 = "CONTROLS:";
-        const char* section3 = "LEVELS:";
+        DrawLine(screenW / 2 - 250, y, screenW / 2 + 250, y, YELLOW);
+        y += 40;
 
-        DrawText(section1,
-            screenWidth / 2 - MeasureText(section1, 28) / 2,
-            120, 28, WHITE);
+        // SECTION 1
+        int s1w = MeasureText(section1, fontSection);
+        DrawText(section1, screenW / 2 - s1w / 2, y, fontSection, WHITE);
+        y += 40;
 
-        const char* objective = "Find your way out of the maze using the WASD keys.";
-        DrawText(objective,
-            screenWidth / 2 - MeasureText(objective, fontSizeText) / 2,
-            160, fontSizeText, LIGHTGRAY);
+        int objW = MeasureText(objective, fontText);
+        DrawText(objective, screenW / 2 - objW / 2, y, fontText, LIGHTGRAY);
+        y += 70;
 
-        DrawText(section2,
-            screenWidth / 2 - MeasureText(section2, 28) / 2,
-            220, 28, WHITE);
-
-        const char* controls[] = {
-            "W - Move up",
-            "A - Move left",
-            "S - Move down",
-            "D - Move right",
-            "ESC - Return to main menu"
-        };
+        // SECTION 2
+        int s2w = MeasureText(section2, fontSection);
+        DrawText(section2, screenW / 2 - s2w / 2, y, fontSection, WHITE);
+        y += 50;
 
         for (int i = 0; i < 5; i++) {
-            int textWidth = MeasureText(controls[i], fontSizeText);
-            DrawText(controls[i],
-                screenWidth / 2 - textWidth / 2,
-                260 + i * 30,
-                fontSizeText,
-                LIGHTGRAY);
+            int w = MeasureText(controls[i], fontText);
+            DrawText(controls[i], screenW / 2 - w / 2, y, fontText, LIGHTGRAY);
+            y += 30;
         }
 
-        DrawText(section3,
-            screenWidth / 2 - MeasureText(section3, 28) / 2,
-            440, 28, WHITE);
+        y += 40;
 
-        const char* levels[] = {
-            "Easy   - Small maze with a simple path.",
-            "Medium - Maze where the screen briefly flashes black.",
-            "Hard   - Only a small circle around you is visible; the rest is dark."
-            "ESCAPE - You have 35 seconds to escape the maze"
-            "Door Game - Collect the keys, unlock the doors, win."
-        };
+        // SECTION 3
+        int s3w = MeasureText(section3, fontSection);
+        DrawText(section3, screenW / 2 - s3w / 2, y, fontSection, WHITE);
+        y += 50;
 
-        for (int i = 0; i < 3; i++) {
-            int textWidth = MeasureText(levels[i], fontSizeText);
-            DrawText(levels[i],
-                screenWidth / 2 - textWidth / 2,
-                480 + i * 30,
-                fontSizeText,
-                LIGHTGRAY);
+        for (int i = 0; i < 5; i++) {
+            int w = MeasureText(levels[i], fontText);
+            DrawText(levels[i], screenW / 2 - w / 2, y, fontText, LIGHTGRAY);
+            y += 28;
         }
 
         EndDrawing();
 
-        if (IsKeyPressed(KEY_ESCAPE))
-            running = false;
+        if (IsKeyPressed(KEY_ESCAPE)) running = false;
     }
 }
