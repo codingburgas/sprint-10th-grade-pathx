@@ -1,89 +1,154 @@
 #include "raylib.h"
 #include "help.h"
 
-void ShowHelp() {
-    bool running = true;
+static int page = 0;
 
-    const int fontTitle = 42;
-    const int fontSection = 30;
-    const int fontText = 24;
+void ShowHelp()
+{
+    int SW = GetScreenWidth();
+    int SH = GetScreenHeight();
 
-    const Color bgColor{ 30, 30, 30, 255 };
+    Font font = LoadFont("Orbitron-Regular.ttf");
+    SetTextureFilter(font.texture, TEXTURE_FILTER_TRILINEAR);
 
-    const char* title = "HELP MENU";
-    const char* section1 = "GAME OBJECTIVE";
-    const char* section2 = "CONTROLS";
-    const char* section3 = "LEVELS";
+    Color panel = { 40, 40, 60, 220 };
+    Color outline = { 0, 255, 200, 255 };
 
-    const char* objective =
-        "Find your way out of the maze using the WASD keys.";
+    int cardWidth = (int)(SW * 0.75f);
+    int cardHeight = 400;
 
-    const char* controls[] = {
-        "W - Move up",
-        "A - Move left",
-        "S - Move down",
-        "D - Move right",
-        "ESC - Return to main menu"
-    };
+    int cx = SW / 2 - cardWidth / 2;
+    int cy = SH / 2 - cardHeight / 2;
 
-    const char* levels[] = {
-        "Easy - Small maze with a simple path.",
-        "Medium - Maze where the screen briefly flashes black.",
-        "Hard - Only a small circle around you is visible.",
-        "ESCAPE - You have 35 seconds to escape the maze.",
-        "Door Game - Collect the keys, unlock the doors, win."
-    };
+    Rectangle btnBack;
+    btnBack.x = 50.0f;
+    btnBack.y = (float)SH - 100.0f;
+    btnBack.width = 200.0f;
+    btnBack.height = 60.0f;
 
-    while (running && !WindowShouldClose()) {
+    Rectangle btnPrev;
+    btnPrev.x = 50.0f;
+    btnPrev.y = (float)SH / 2.0f - 40.0f;
+    btnPrev.width = 60.0f;
+    btnPrev.height = 60.0f;
+
+    Rectangle btnNext;
+    btnNext.x = (float)SW - 110.0f;
+    btnNext.y = (float)SH / 2.0f - 40.0f;
+    btnNext.width = 60.0f;
+    btnNext.height = 60.0f;
+
+    while (!WindowShouldClose())
+    {
+        Vector2 mouse = GetMousePosition();
+
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            if (CheckCollisionPointRec(mouse, btnBack))
+                break;
+
+            if (CheckCollisionPointRec(mouse, btnPrev))
+            {
+                page--;
+                if (page < 0) page = 2;
+            }
+
+            if (CheckCollisionPointRec(mouse, btnNext))
+            {
+                page++;
+                if (page > 2) page = 0;
+            }
+        }
+
         BeginDrawing();
-        ClearBackground(bgColor);
 
-        int screenW = GetScreenWidth();
-        int y = 40;
+        Color bg = { 10, 15, 35, 255 };
+        ClearBackground(bg);
+        Vector2 titlePos;
+        titlePos.x = (float)SW / 2.0f - 240.0f;
+        titlePos.y = 40.0f;
+        DrawTextEx(font, "HELP MENU", titlePos, 70.0f, 3.0f, WHITE);
+        Rectangle cardRect;
+        cardRect.x = (float)cx;
+        cardRect.y = (float)cy;
+        cardRect.width = (float)cardWidth;
+        cardRect.height = (float)cardHeight;
 
-        // TITLE
-        int titleWidth = MeasureText(title, fontTitle);
-        DrawText(title, screenW / 2 - titleWidth / 2, y, fontTitle, YELLOW);
-        y += 60;
+        DrawRectangleRounded(cardRect, 0.08f, 20, panel);
+        DrawRectangleRoundedLines(cardRect, 0.08f, 20, outline);
 
-        DrawLine(screenW / 2 - 250, y, screenW / 2 + 250, y, YELLOW);
-        y += 40;
-
-        // SECTION 1
-        int s1w = MeasureText(section1, fontSection);
-        DrawText(section1, screenW / 2 - s1w / 2, y, fontSection, WHITE);
-        y += 40;
-
-        int objW = MeasureText(objective, fontText);
-        DrawText(objective, screenW / 2 - objW / 2, y, fontText, LIGHTGRAY);
-        y += 70;
-
-        // SECTION 2
-        int s2w = MeasureText(section2, fontSection);
-        DrawText(section2, screenW / 2 - s2w / 2, y, fontSection, WHITE);
-        y += 50;
-
-        for (int i = 0; i < 5; i++) {
-            int w = MeasureText(controls[i], fontText);
-            DrawText(controls[i], screenW / 2 - w / 2, y, fontText, LIGHTGRAY);
-            y += 30;
+        Vector2 pos;
+        pos.x = cardRect.x + 40.0f;
+        pos.y = cardRect.y + 40.0f;
+        if (page == 0)
+        {
+            // CONTROLS
+            DrawTextEx(font, "CONTROLS", pos, 55.0f, 2.0f, YELLOW);
+            pos.y += 90.0f;
+            DrawTextEx(font, "- Move with ARROW KEYS", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 55.0f;
+            DrawTextEx(font, "- or with W A S D", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 55.0f;
+            DrawTextEx(font, "- Press ESC to pause / exit", pos, 40.0f, 2.0f, WHITE);
+        }
+        else if (page == 1)
+        {
+            Color greenTitle = { 120, 255, 140, 255 };
+            DrawTextEx(font, "RULES", pos, 55.0f, 2.0f, greenTitle);
+            pos.y += 90.0f;
+            DrawTextEx(font, "- Avoid walls and obstacles", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 55.0f;
+            DrawTextEx(font, "- Collect coins to level up", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 55.0f;
+            DrawTextEx(font, "- Every 10 coins = +1 level", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 55.0f;
+            DrawTextEx(font, "- Have fun!", pos, 40.0f, 2.0f, WHITE);
+        }
+        else if (page == 2)
+        {
+            // GAME MODES
+            Color skyTitle = { 130, 200, 255, 255 };
+            DrawTextEx(font, "GAME MODES", pos, 55.0f, 2.0f, skyTitle);
+            pos.y += 90.0f;
+            DrawTextEx(font, "EASY    - Simple slow maze.", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 50.0f;
+            DrawTextEx(font, "MEDIUM  - Screen briefly flashes black.", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 50.0f;
+            DrawTextEx(font, "HARD    - Only a small circle around player.", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 60.0f;
+            DrawTextEx(font, "DOOR MAZE - Find keys, then the matching door.", pos, 40.0f, 2.0f, WHITE);
+            pos.y += 60.0f;
+            DrawTextEx(font, "ESCAPE - 40 seconds to exit the maze.", pos, 40.0f, 2.0f, WHITE);
         }
 
-        y += 40;
+        Vector2 leftPos;
+        leftPos.x = btnPrev.x + 10.0f;
+        leftPos.y = btnPrev.y - 5.0f;
+        DrawTextEx(font, "<", leftPos, 60.0f, 2.0f, WHITE);
 
-        // SECTION 3
-        int s3w = MeasureText(section3, fontSection);
-        DrawText(section3, screenW / 2 - s3w / 2, y, fontSection, WHITE);
-        y += 50;
+        Vector2 rightPos;
+        rightPos.x = btnNext.x + 10.0f;
+        rightPos.y = btnNext.y - 5.0f;
+        DrawTextEx(font, ">", rightPos, 60.0f, 2.0f, WHITE);
+        bool hover = CheckCollisionPointRec(mouse, btnBack);
 
-        for (int i = 0; i < 5; i++) {
-            int w = MeasureText(levels[i], fontText);
-            DrawText(levels[i], screenW / 2 - w / 2, y, fontText, LIGHTGRAY);
-            y += 28;
-        }
+        Color normalCol = { 0, 140, 220, 255 };
+        Color hoverCol = { 0, 180, 255, 255 };
+        Color backCol;
+
+        if (hover) backCol = hoverCol;
+        else       backCol = normalCol;
+
+        DrawRectangleRounded(btnBack, 0.15f, 8, backCol);
+        DrawRectangleRoundedLines(btnBack, 0.15f, 8, WHITE);
+
+        Vector2 backTextPos;
+        backTextPos.x = btnBack.x + 60.0f;
+        backTextPos.y = btnBack.y + 10.0f;
+        DrawTextEx(font, "BACK", backTextPos, 45.0f, 2.0f, WHITE);
 
         EndDrawing();
-
-        if (IsKeyPressed(KEY_ESCAPE)) running = false;
     }
+
+    UnloadFont(font);
 }

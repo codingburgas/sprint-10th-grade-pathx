@@ -142,10 +142,10 @@ static void DrawCoinCounter() {
 static void MovePlayer() {
     int oldX = px, oldY = py;
 
-    if (IsKeyPressed(KEY_W) && !maze[px][py].topWall && py > 0) py--;
-    if (IsKeyPressed(KEY_S) && !maze[px][py].bottomWall && py < GRID_H - 1) py++;
-    if (IsKeyPressed(KEY_A) && !maze[px][py].leftWall && px > 0) px--;
-    if (IsKeyPressed(KEY_D) && !maze[px][py].rightWall && px < GRID_W - 1) px++;
+    if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !maze[px][py].topWall && py > 0) py--;
+    if ((IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) && !maze[px][py].bottomWall && py < GRID_H - 1) py++;
+    if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) && !maze[px][py].leftWall && px > 0) px--;
+    if ((IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) && !maze[px][py].rightWall && px < GRID_W - 1) px++;
 
     // Collect coin
     if ((px != oldX || py != oldY) && coins[px][py]) {

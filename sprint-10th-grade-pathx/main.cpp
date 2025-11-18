@@ -35,7 +35,7 @@ void DrawGlowButton(Font font, Rectangle r, const char* label, Color base, Vecto
 
     Vector2 textSize = MeasureTextEx(font, label, 42, 2);
 
-    Vector2 textPos;
+    Vector2 textPos; // Centering text 
     textPos.x = r.x + r.width / 2 - textSize.x / 2;
     textPos.y = r.y + r.height / 2 - textSize.y / 2;
 
@@ -218,7 +218,7 @@ int main()
             BeginDrawing();
             Color bg = { 10, 10, 25, 255 };
             ClearBackground(bg);
-
+            // Struct field assignment 
             Vector2 tpos;
             tpos.x = SW / 2 - 240;
             tpos.y = 40;
@@ -252,7 +252,6 @@ int main()
             {
                 bool hover = CheckCollisionPointRec(mouse, difficultyButtons[i]);
 
-                // --- BASE COLOR ---
                 Color base = difficultyColors[i];
 
                 // Darken / brighten
@@ -276,6 +275,7 @@ int main()
 
                 if (hover)
                 {
+                    // Color brightening with RGB clamping
                     int nr = mid.r + 40;
                     int ng = mid.g + 40;
                     int nb = mid.b + 40;
@@ -290,22 +290,12 @@ int main()
                 }
 
                 Rectangle r = difficultyButtons[i];
-
-                // --- SHADOW LAYER ---
                 Rectangle shadow = { r.x, r.y + 6, r.width, r.height };
                 DrawRectangleRec(shadow, dark);
-
-                // --- MAIN BUTTON ---
                 DrawRectangleRec(r, mid);
-
-                // --- TOP HIGHLIGHT ---
                 Rectangle highlight = { r.x, r.y, r.width, r.height * 0.25f };
                 DrawRectangleRec(highlight, light);
-
-                // --- OUTLINE ---
                 DrawRectangleLinesEx(r, 3, light);
-
-                // --- TEXT ---
                 Vector2 ts = MeasureTextEx(uiFont, difficultyNames[i], 48, 3);
                 Vector2 tp;
                 tp.x = r.x + r.width / 2 - ts.x / 2;
