@@ -27,11 +27,11 @@ void ShowHelp() {
     };
 
     const char* levels[] = {
-        "Easy       - Small maze with a simple path.",
-        "Medium     - Maze where the screen briefly flashes black.",
-        "Hard       - Only a small circle around you is visible.",
-        "ESCAPE     - You have 35 seconds to escape the maze.",
-        "Door Game  - Collect the keys, unlock the doors, win."
+        "Easy - Small maze with a simple path.",
+        "Medium - Maze where the screen briefly flashes black.",
+        "Hard - Only a small circle around you is visible.",
+        "ESCAPE - You have 35 seconds to escape the maze.",
+        "Door Game - Collect the keys, unlock the doors, win."
     };
 
     while (running && !WindowShouldClose()) {

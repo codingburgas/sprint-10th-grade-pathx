@@ -1,10 +1,30 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\@proektnadeinost\\sprint-10th-grade-pathx\\",
+  "WorkspaceRootPath": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|D:\\@proektnadeinost\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameEasy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\gameEasy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameHard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\gameHard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\help.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\help.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameDoorMaze.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\gameDoorMaze.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameMedium.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{646B7C61-E304-4425-A662-42D049DAC2FE}|sprint-10th-grade-pathx\\sprint-10th-grade-pathx.vcxproj|solutionrelative:sprint-10th-grade-pathx\\gameMedium.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,17 +34,80 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "help.cpp",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\help.cpp",
+              "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\help.cpp",
+              "ToolTip": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\help.cpp",
+              "RelativeToolTip": "sprint-10th-grade-pathx\\help.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-18T16:52:26.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "gameDoorMaze.cpp",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameDoorMaze.cpp",
+              "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\gameDoorMaze.cpp",
+              "ToolTip": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameDoorMaze.cpp",
+              "RelativeToolTip": "sprint-10th-grade-pathx\\gameDoorMaze.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-18T16:42:48.21Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "gameEasy.cpp",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameEasy.cpp",
+              "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\gameEasy.cpp",
+              "ToolTip": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameEasy.cpp",
+              "RelativeToolTip": "sprint-10th-grade-pathx\\gameEasy.cpp",
+              "ViewState": "AgIAAMYAAAAAAAAAAAAAAOoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-18T16:41:52.157Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "gameHard.cpp",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameHard.cpp",
+              "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\gameHard.cpp",
+              "ToolTip": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameHard.cpp",
+              "RelativeToolTip": "sprint-10th-grade-pathx\\gameHard.cpp",
+              "ViewState": "AgIAAAIBAAAAAAAAAAAAAAgBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-18T16:39:34.558Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "gameMedium.cpp",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameMedium.cpp",
+              "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\gameMedium.cpp",
+              "ToolTip": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\gameMedium.cpp",
+              "RelativeToolTip": "sprint-10th-grade-pathx\\gameMedium.cpp",
+              "ViewState": "AgIAAOQAAAAAAAAAAAAAAPQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-18T16:38:00.294Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "main.cpp",
-              "DocumentMoniker": "D:\\@proektnadeinost\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp",
               "RelativeDocumentMoniker": "sprint-10th-grade-pathx\\main.cpp",
-              "ToolTip": "D:\\@proektnadeinost\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp",
+              "ToolTip": "C:\\Users\\User\\Documents\\sprint-10th-grade-pathx\\sprint-10th-grade-pathx\\main.cpp",
               "RelativeToolTip": "sprint-10th-grade-pathx\\main.cpp",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAAAKUAAABAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-11-17T20:59:38.83Z",
               "EditorCaption": ""

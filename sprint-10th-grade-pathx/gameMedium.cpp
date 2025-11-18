@@ -18,12 +18,10 @@ static Cell maze[GRID_H][GRID_W];
 static bool coins[GRID_H][GRID_W] = { false };
 static int coinsCollected = 0;
 static int totalCoins = 0;
-
 static int playerX = 0;
 static int playerY = 0;
 static int endX = GRID_W - 1;
 static int endY = GRID_H - 1;
-
 static bool gameStarted = false;
 static float startTime = 0.0f;
 static float elapsedTime = 0.0f;
@@ -34,7 +32,7 @@ static Sound winSound;
 
 // Blinking (dark blackout)
 static float blinkTimer = 0.0f;
-static bool blinkState = false; // TRUE = blackout
+static bool blinkState = false;
 
 // Global variable to return coins to main menu
 static int lastGameCoins = 0;
@@ -51,7 +49,7 @@ static void InitializeCoins() {
         for (int x = 0; x < GRID_W; x++)
             coins[y][x] = false;
 
-    for (int y = 0; y < GRID_H; y++) {
+    for (int y = 0; y < GRID_H; y++)
         for (int x = 0; x < GRID_W; x++) {
             if ((x == 0 && y == 0) || (x == endX && y == endY)) continue;
             if (rand() % 100 < 15) {
@@ -59,16 +57,12 @@ static void InitializeCoins() {
                 totalCoins++;
             }
         }
-    }
 }
 
 static void GenerateMazeDFS(int x, int y) {
-    // Reset maze first
-    for (int y = 0; y < GRID_H; y++) {
-        for (int x = 0; x < GRID_W; x++) {
+    for (int y = 0; y < GRID_H; y++)
+        for (int x = 0; x < GRID_W; x++)
             maze[y][x] = { false, true, true, true, true };
-        }
-    }
 
     bool visited[GRID_H][GRID_W] = { false };
     std::vector<Vector2> stack;
@@ -82,38 +76,21 @@ static void GenerateMazeDFS(int x, int y) {
         int cx = (int)current.x;
         int cy = (int)current.y;
 
-        // Check neighbors
         std::vector<int> directions;
-        if (cy > 0 && !visited[cy - 1][cx]) directions.push_back(0); // Up
-        if (cx < GRID_W - 1 && !visited[cy][cx + 1]) directions.push_back(1); // Right
-        if (cy < GRID_H - 1 && !visited[cy + 1][cx]) directions.push_back(2); // Down
-        if (cx > 0 && !visited[cy][cx - 1]) directions.push_back(3); // Left
+        if (cy > 0 && !visited[cy - 1][cx]) directions.push_back(0);
+        if (cx < GRID_W - 1 && !visited[cy][cx + 1]) directions.push_back(1);
+        if (cy < GRID_H - 1 && !visited[cy + 1][cx]) directions.push_back(2);
+        if (cx > 0 && !visited[cy][cx - 1]) directions.push_back(3);
 
         if (!directions.empty()) {
             int dir = directions[rand() % directions.size()];
             int nx = cx, ny = cy;
 
             switch (dir) {
-            case 0: // Up
-                maze[cy][cx].topWall = false;
-                ny = cy - 1;
-                maze[ny][cx].bottomWall = false;
-                break;
-            case 1: // Right
-                maze[cy][cx].rightWall = false;
-                nx = cx + 1;
-                maze[cy][nx].leftWall = false;
-                break;
-            case 2: // Down
-                maze[cy][cx].bottomWall = false;
-                ny = cy + 1;
-                maze[ny][cx].topWall = false;
-                break;
-            case 3: // Left
-                maze[cy][cx].leftWall = false;
-                nx = cx - 1;
-                maze[cy][nx].rightWall = false;
-                break;
+            case 0: maze[cy][cx].topWall = false; ny = cy - 1; maze[ny][cx].bottomWall = false; break;
+            case 1: maze[cy][cx].rightWall = false; nx = cx + 1; maze[cy][nx].leftWall = false; break;
+            case 2: maze[cy][cx].bottomWall = false; ny = cy + 1; maze[ny][cx].topWall = false; break;
+            case 3: maze[cy][cx].leftWall = false; nx = cx - 1; maze[cy][nx].rightWall = false; break;
             }
 
             visited[ny][nx] = true;
@@ -127,7 +104,7 @@ static void GenerateMazeDFS(int x, int y) {
 }
 
 static void DrawMazeLines(int cell, int ox, int oy) {
-    for (int y = 0; y < GRID_H; y++) {
+    for (int y = 0; y < GRID_H; y++)
         for (int x = 0; x < GRID_W; x++) {
             int sx = ox + x * cell;
             int sy = oy + y * cell;
@@ -140,7 +117,6 @@ static void DrawMazeLines(int cell, int ox, int oy) {
             if (coins[y][x])
                 DrawCircle(sx + cell / 2, sy + cell / 2, cell / 6, YELLOW);
         }
-    }
 
     DrawRectangle(ox + endX * cell + 2, oy + endY * cell + 2, cell - 4, cell - 4, GREEN);
 }
@@ -155,7 +131,6 @@ static void DrawCoinCounter(int hudX, int hudY) {
 void StartMediumGame() {
     srand((unsigned int)time(0));
 
-    // Load sounds
     coinSound = LoadSound("coins.wav");
     SetSoundVolume(coinSound, 1.0f);
     winSound = LoadSound("win.wav");
@@ -166,44 +141,33 @@ void StartMediumGame() {
 
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
-
-    SetTargetFPS(60);
-
     int cell = (screenWidth / GRID_W < screenHeight / GRID_H) ? screenWidth / GRID_W : screenHeight / GRID_H;
     int offsetX = (screenWidth - cell * GRID_W) / 2;
     int offsetY = (screenHeight - cell * GRID_H) / 2;
 
-    playerX = 0;
-    playerY = 0;
+    playerX = 0; playerY = 0;
     gameStarted = false;
     startTime = 0.0f;
     elapsedTime = 0.0f;
-    lastGameCoins = 0; // Reset for this session
+    lastGameCoins = 0;
 
     blinkTimer = 0.0f;
     blinkState = false;
 
     enum GameState { PLAYING, WINSCREEN };
     GameState state = PLAYING;
+    float winStartTime = 0.0f; // For animation
 
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_ESCAPE)) break;
 
-        // Update timer only when game is started and playing
-        if (gameStarted && state == PLAYING) {
-            elapsedTime = (float)GetTime() - startTime;
-        }
+        // Update timer only when playing
+        if (gameStarted && state == PLAYING) elapsedTime = (float)GetTime() - startTime;
 
-        // blackout cycle
+        // Blackout cycle
         blinkTimer += GetFrameTime();
-        if (!blinkState && blinkTimer >= 4.0f) {
-            blinkState = true;
-            blinkTimer = 0.0f;
-        }
-        else if (blinkState && blinkTimer >= 2.5f) {
-            blinkState = false;
-            blinkTimer = 0.0f;
-        }
+        if (!blinkState && blinkTimer >= 4.0f) { blinkState = true; blinkTimer = 0.0f; }
+        else if (blinkState && blinkTimer >= 2.5f) { blinkState = false; blinkTimer = 0.0f; }
 
         if (state == PLAYING) {
             int oldX = playerX, oldY = playerY;
@@ -228,44 +192,44 @@ void StartMediumGame() {
             BeginDrawing();
             ClearBackground(BLACK);
 
-            // If blackout → show NOTHING
             if (!blinkState) {
                 DrawMazeLines(cell, offsetX, offsetY);
                 DrawRectangle(offsetX + playerX * cell + 2, offsetY + playerY * cell + 2, cell - 4, cell - 4, YELLOW);
             }
 
-            // Draw timer
             DrawRectangle(10, 10, 150, 60, Fade(BLACK, 0.7f));
             DrawText("TIME:", 20, 15, 25, WHITE);
             int minutes = (int)elapsedTime / 60;
             int seconds = (int)elapsedTime % 60;
             DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, 40, 25, WHITE);
-
             DrawCoinCounter(10, 10);
+
             EndDrawing();
 
             if (playerX == endX && playerY == endY) {
                 state = WINSCREEN;
-                lastGameCoins = coinsCollected; // Store coins collected in this game
+                lastGameCoins = coinsCollected;
                 PlaySound(winSound);
+                winStartTime = (float)GetTime(); // Start animation timer
             }
         }
         else if (state == WINSCREEN) {
             BeginDrawing();
             ClearBackground(BLACK);
-            DrawText("YOU WIN!", screenWidth / 2 - 150, screenHeight / 2 - 120, 60, GOLD);
 
-            int minutes = (int)elapsedTime / 60;
-            int seconds = (int)elapsedTime % 60;
-
-            DrawText(TextFormat("Time: %02d:%02d", minutes, seconds),
-                screenWidth / 2 - 100, screenHeight / 2, 40, WHITE);
-
-            DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins),
-                screenWidth / 2 - 100, screenHeight / 2 + 50, 40, YELLOW);
-
-            DrawText("Press R to Play Again", screenWidth / 2 - 160, screenHeight / 2 + 120, 30, RAYWHITE);
-            DrawText("Press ESC to Return to Menu", screenWidth / 2 - 200, screenHeight / 2 + 160, 30, RAYWHITE);
+            float elapsedWin = (float)GetTime() - winStartTime;
+            float winY = screenHeight / 2 - 120 - 50 * (elapsedWin / 2.0f); // move up 50px over 2s
+            if (elapsedWin >= 0.0f) DrawText("YOU WIN!", screenWidth / 2 - 150, (int)winY, 60, GOLD);
+            if (elapsedWin >= 0.5f)
+                DrawText(TextFormat("Time: %02d:%02d", (int)elapsedTime / 60, (int)elapsedTime % 60),
+                    screenWidth / 2 - 100, screenHeight / 2, 40, WHITE);
+            if (elapsedWin >= 1.0f)
+                DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins),
+                    screenWidth / 2 - 100, screenHeight / 2 + 50, 40, YELLOW);
+            if (elapsedWin >= 1.5f) {
+                DrawText("Press R to Play Again", screenWidth / 2 - 160, screenHeight / 2 + 120, 30, RAYWHITE);
+                DrawText("Press ESC to Return to Menu", screenWidth / 2 - 200, screenHeight / 2 + 160, 30, RAYWHITE);
+            }
 
             EndDrawing();
 

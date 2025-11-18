@@ -152,6 +152,8 @@ void StartEasyGame() {
     winSound = LoadSound("win.wav");
     SetSoundVolume(winSound, 1.0f);
 
+    float winStartTime = 0.0f; // For animated win screen
+
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
@@ -172,6 +174,7 @@ void StartEasyGame() {
                 elapsedTime = GetTime() - startTime;
                 lastGameCoins = coinsCollected; // Store coins collected in this game
                 PlaySound(winSound);
+                winStartTime = GetTime(); // Start animation timer
             }
 
             if (gameStarted)
@@ -187,14 +190,27 @@ void StartEasyGame() {
         }
 
         if (state == GAME_WINSCREEN) {
-            DrawText("YOU WIN!", sw / 2 - 150, sh / 2 - 180, 60, GOLD);
-            DrawText(TextFormat("Time: %.1f sec", elapsedTime),
-                sw / 2 - 100, sh / 2 - 100, 40, WHITE);
-            DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins),
-                sw / 2 - 100, sh / 2 - 50, 40, YELLOW);
-            DrawText("Press R to Play Again", sw / 2 - 160, sh / 2 + 20, 30, RAYWHITE);
-            DrawText("Press ESC for Menu", sw / 2 - 150, sh / 2 + 60, 30, RAYWHITE);
+            float elapsedWin = GetTime() - winStartTime;
 
+
+            float winY = sh / 2 - 180 - 50 * (elapsedWin / 3.0f); // Moves up 50 pixels in 2 seconds
+            if (elapsedWin >= 0.0f)
+                DrawText("YOU WIN!", sw / 2 - 150, (int)winY, 60, GOLD);
+
+            if (elapsedWin >= 1.0f)
+                DrawText(TextFormat("Coins: %d/%d", coinsCollected, totalCoins),
+                    sw / 2 - 100, sh / 2 - 50, 40, YELLOW);
+
+            if (elapsedWin >= 0.5f) //тime of appearance
+                DrawText(TextFormat("Time: %.1f sec", elapsedTime),
+                    sw / 2 - 100, sh / 2 - 100, 40, WHITE);
+
+            if (elapsedWin >= 1.5f) {
+                DrawText("Press R to Play Again", sw / 2 - 160, sh / 2 + 20, 30, RAYWHITE);
+                DrawText("Press ESC for Menu", sw / 2 - 150, sh / 2 + 60, 30, RAYWHITE);
+            }
+
+            // Restart or exit
             if (IsKeyPressed(KEY_R)) {
                 InitializeMaze();
                 GenerateMaze(0, 0);

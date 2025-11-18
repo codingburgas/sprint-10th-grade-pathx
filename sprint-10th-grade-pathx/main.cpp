@@ -36,7 +36,7 @@ int main() {
 
     InitAudioDevice();
     Sound clickSound = LoadSound("click.wav");
-    Sound levelUpSound = LoadSound("levelup.wav"); // You'll need to add this sound file
+    Sound levelUpSound = LoadSound("levelup.wav");
     SetSoundVolume(clickSound, 1.0f);
     SetSoundVolume(levelUpSound, 1.0f);
 
@@ -54,11 +54,12 @@ int main() {
         int SW = GetScreenWidth();
         int SH = GetScreenHeight();
         Vector2 mouse = GetMousePosition();
-
+        // aggregate initialization of struct values
         Rectangle btnPlay = { float(SW) / 2 - btnWidth / 2, float(SH) / 2 - 100, btnWidth, btnHeight };
         Rectangle btnHelp = { float(SW) / 2 - btnWidth / 2, float(SH) / 2, btnWidth, btnHeight };
         Rectangle btnExit = { float(SW) / 2 - btnWidth / 2, float(SH) / 2 + 100, btnWidth, btnHeight };
 
+        //centers the
         float startY = float(SH) / 2 - (btnCount * btnHeight + (btnCount - 1) * gap) / 2;
         Rectangle difficultyButtons[btnCount] = {
             { float(SW) / 2 - btnWidth / 2, startY + 0 * (btnHeight + gap), btnWidth, btnHeight },

@@ -151,7 +151,7 @@ static void MovePlayer() {
     if ((px != oldX || py != oldY) && coins[px][py]) {
         coins[px][py] = false;
         coinsCollected++;
-        PlaySound(coinSound); // <- sound
+        PlaySound(coinSound);
     }
 
     // Start timer
@@ -214,7 +214,7 @@ void StartHardGame() {
         if (px == endX && py == endY && !win) {
             win = true;
             lastGameCoins = coinsCollected; // Store coins collected in this game
-            PlaySound(winSound); // <- sound
+            PlaySound(winSound);
         }
 
         // Darkness
