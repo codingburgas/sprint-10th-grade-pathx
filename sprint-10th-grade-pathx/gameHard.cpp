@@ -255,7 +255,9 @@ void StartHardGame() {
 
         EndDrawing();
 
-        if (IsKeyPressed(KEY_ESCAPE)) break;
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            return;
+        }
     }
 
     UnloadRenderTexture(darkness);
