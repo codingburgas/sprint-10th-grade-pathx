@@ -1,6 +1,6 @@
 <h1 align="center"> Path X </h1>
 <p align="center">
-  <img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\PathX.jpg" alt="PathX Logo" width="45%">
+  <img src="documents/PathX.jpg" alt="PathX Logo" width="45%">
 </p>
 
 
@@ -8,7 +8,7 @@
 
 
 ## 📌 Table of contents
-- [About the Project](#about)
+- [Description](#about)
 - [Documentation](#docs)
 - [Installation & Setup](#install)
 - [Tech Stack](#technologies)
@@ -18,6 +18,7 @@
 
 ## 🔍 Description <a name="about"></a>
 
+PathX is an interactive maze-based game built with C++ and Raylib, combining logic challenges, time pressure, and collectible items. The project showcases graphics, sound, and multi-mode gameplay within a complete game environment.
 
 ---
 
@@ -41,29 +42,29 @@
 
 ###  Tools:
 <p>
-  <img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\VS Code.png" alt="VS Code Icon" width=75px>
-  <img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\github.png" alt="GitHub Icon" width=75px>
+  <img src="documents/VS Code.png" alt="VS Code Icon" width=75px>
+  <img src="documents/github.png" alt="GitHub Icon" width=75px>
   </p>
 
 ### Languages:
 <p>
        
-  <img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\C++.png" alt="C++ Icon" width=75px>
+  <img src="documents/C++.png" alt="C++ Icon" width=75px>
 </p>
 
 ### Comunication: 
-<img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\teams.png" alt="Teams Icon" width=75px>
+<img src="documents/teams.png" alt="Teams Icon" width=75px>
 
 ### Documentation: 
 <p>
-  <img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\Word.png" alt="Word Icon" width=75px>
-  <img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\Powerpoint.png" alt="Powerpoint Icon" width=75px>
+  <img src="documents/Word.png" alt="Word Icon" width=75px>
+  <img src="documents/Powerpoint.png" alt="Powerpoint Icon" width=75px>
 </p>
 
 ### Design: 
 
 <p>
-  <img src="C:\Users\PC\Documents\sprint-10th-grade-pathx\documents\Photoshop.png" alt="Photoshop Icon" width=75px>
+  <img src="documents/Photoshop.png" alt="Photoshop Icon" width=75px>
 </p>
 
 ---
